@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\t02_ShopCMS.props" />
+</Project>

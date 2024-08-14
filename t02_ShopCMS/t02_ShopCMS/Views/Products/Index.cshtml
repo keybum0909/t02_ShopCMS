@@ -1,0 +1,76 @@
+﻿@model IEnumerable<t02_ShopCMS.Models.Product>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+    /
+    <a asp-action="CreateCategory">Create Category</a>
+</p>
+<form asp-action="Index" method="get" class="col-4 mb-3">
+    <div class="input-group input-group-sm ">
+        <input class="form-control" type="text" placeholder="Name" name="searchString" />
+        <input class="btn btn-sm btn-primary" type="submit" value="Search" />
+    </div>
+</form>
+<div class="row">
+    <div class="row col-md-12">
+        <button class="add-product">+ 新增產品</button>
+    </div>
+    <div class="col-md-3 categories-container"></div>
+    <div class="row col-md-9">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 product-list"
+                     data-image="@item.Image"
+                     data-category-name="@item.Category.Name"
+                     data-name="@item.Name"
+                     data-description="@item.Description">
+                    <img id="@item.Id" />
+                    <div class="col-md-12 category-name">
+                        @item.Category.Name
+                    </div>
+                    <div>
+                        @item.Name
+                    </div>
+                    <div class="category-description">
+                        @item.Description
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        const productsArr = JSON.parse('@Html.Raw(ViewBag.ProductsJson)');
+        const categoriesArr = JSON.parse('@Html.Raw(ViewBag.CategoriesJson)');
+        
+        $(document).ready(function () {
+            showImage();
+            showCategory();
+        });
+
+        function showImage() {
+            productsArr.forEach(row => {
+                const imgElem = document.getElementById(row.Id);
+                if (imgElem && imgElem.tagName.toLowerCase() === 'img') {
+                    imgElem.setAttribute('src', "data:image/jpg;base64," + row.Image);
+                }
+            });
+        }
+    
+        function showCategory() {
+            const template = (categoryName) => `<button class="categories-btn">${categoryName}</button>`;
+
+            categoriesArr.forEach(element => {
+                const categoriesBtn = template(element.Name);
+                $(".categories-container").append(categoriesBtn);
+            });
+        }
+    </script>
+}

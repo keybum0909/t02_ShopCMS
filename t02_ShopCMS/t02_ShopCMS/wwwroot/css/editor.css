@@ -1,0 +1,5 @@
+﻿/* CKEditor 編輯區塊 */
+.ck-editor__editable_inline {
+    /* 設定高度 */
+    height: 200px;
+}
