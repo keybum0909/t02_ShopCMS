@@ -1,4 +1,4 @@
-﻿@model IEnumerable<t02_ShopCMS.Models.Product>
+﻿@model Indexresp
 @{
     ViewData["Title"] = "Index";
 }
@@ -23,7 +23,7 @@
     <div class="col-md-3 categories-container"></div>
     <div class="row col-md-9">
         <div class="row">
-            @foreach (var item in Model)
+            @foreach (var item in Model.Products)
             {
                 <div class="col-md-4 product-list"
                      data-image="@item.Image"
@@ -40,6 +40,13 @@
                     <div class="category-description">
                         @item.Description
                     </div>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger">
+                            @ViewBag.ErrorMessage
+                        </div>
+                    }
                 </div>
             }
         </div>
@@ -47,8 +54,9 @@
 </div>
 @section Scripts {
     <script>
-        const productsArr = JSON.parse('@Html.Raw(ViewBag.ProductsJson)');
-        const categoriesArr = JSON.parse('@Html.Raw(ViewBag.CategoriesJson)');
+        const productsArr = '@Html.Raw(Model.Products)';
+        const categoriesArr = '@Html.Raw(Model.Categories)';
+        console.log(productsArr, categoriesArr)
         
         $(document).ready(function () {
             showImage();

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Json.Serialization;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,48 +8,27 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using t02_ShopCMS.Data;
 using t02_ShopCMS.Models;
+using t02_ShopCMS.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace t02_ShopCMS.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly t02_ShopCMSContext _context;
+        private readonly IProductsService _productsService;
 
-        public ProductsController(t02_ShopCMSContext context)
+        public ProductsController(t02_ShopCMSContext context, IServiceProvider provider)
         {
             _context = context;
+            _productsService = provider.GetRequiredService<IProductsService>();
         }
 
         // GET: Products
         public async Task<IActionResult> Index(string searchString, string currentFilter, int? pageNumber)
         {
-            
-            var result = from v in _context.Product.Include(p => p.Category) select v;
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                result = result.Where(s=>s.Name.Contains(searchString));
-            }
-
-            var products = _context.Product
-                           .Include(p => p.Category)
-                           .Select(p => new
-                           {
-                               p.Id,
-                               p.Image,
-                               p.Name,
-                               p.Description,
-                               p.Price,
-                               p.Content,
-                               p.Stock,
-                               CategoryName = p.Category.Name
-                           }).ToList();
-            var categories = _context.Category.ToList();
-            ViewBag.ProductsJson = JsonSerializer.Serialize(products);
-            ViewBag.CategoriesJson = JsonSerializer.Serialize(categories);
-
-            //inner join
-            //var p = await _context.Product.Include(p => p.Category).ToArrayAsync();
-            return View(await result.ToArrayAsync());
+            var result = await _productsService.Index(searchString, currentFilter, pageNumber);
+            return View(result);
         }
 
         // GET: Products/Details/5
@@ -120,6 +96,8 @@ namespace t02_ShopCMS.Controllers
                     }
                 }
 
+                product.CreateTime = DateTime.Now;
+
                 //對資料庫新增資料
                 _context.Add(product);
                 //儲存資料
@@ -135,31 +113,14 @@ namespace t02_ShopCMS.Controllers
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            var result = await _productsService.Edit(id);
+            if(result.Product == null)
             {
-                return NotFound();
+                // 設置錯誤訊息
+                ViewBag.ErrorMessage = "此商品於兩周內上架，不可編輯";
+                return RedirectToAction("Index");
             }
-
-            DetailViewModel dvm = new DetailViewModel();
-            var product = await _context.Product
-                            .Include(p => p.Category)
-                            .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (product == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                dvm.Product = product;
-                if (product.Image != null)
-                {
-                    dvm.Imgsrc = ViewImage(product.Image);
-                }
-            }
-            ViewData["Categories"] = new SelectList(_context.Set<Category>(), "Id", "Name", product.CategoryId);
-
-            return View(dvm);
+            return View(result);
         }
 
         // POST: Products/Edit/5
@@ -167,7 +128,7 @@ namespace t02_ShopCMS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, DetailViewModel dvm, IFormFile myImg)
+        public async Task<IActionResult> EditSave(int id, DetailViewModel dvm, IFormFile myImg)
         {
             if (id != dvm.Product.Id)
             {
