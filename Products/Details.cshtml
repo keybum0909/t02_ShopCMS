@@ -1,0 +1,70 @@
+﻿@model t02_ShopCMS.Models.DetailViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <div class="row">
+        @*//圖片*@
+        <div class = "col-sm-5">
+            <img class="img-fluid mx-auto d-block";" src="@Html.DisplayFor(model => model.Imgsrc)" />    
+        </div>
+        
+        <div class = "col-sm-7">
+            @*//名稱*@
+            <p class="text-secondary mb-0">
+                @Html.DisplayNameFor(model => model.Product.Name)
+            </p>
+            <p>
+                 @Html.DisplayFor(model => model.Product.Name)
+            </p>
+            @*//簡介*@
+            <p class="text-secondary mb-0">
+                @Html.DisplayNameFor(model => model.Product.Description)
+            </p>
+            <p style="height:200px;">
+                @Html.DisplayFor(model => model.Product.Description)  
+            </p>
+            <div class="row">
+                @*//價格*@
+                <div class = "col-sm-6">
+                    <p class="text-secondary mb-2">
+                        @Html.DisplayNameFor(model => model.Product.Price)
+                    </p>
+                    <p>
+                        @Html.DisplayFor(model => model.Product.Price)
+                    </p>
+                </div>
+                @*//庫存*@
+                <div class = "col-sm-6">
+                    <p class="text-secondary mb-2">
+                        @Html.DisplayNameFor(model => model.Product.Stock)
+                    </p>
+                    <p>
+                        @Html.DisplayFor(model => model.Product.Stock)   
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    @*//內容*@
+    <div class = "row">
+        <div class="col-12">
+            <p class="text-secondary">
+                @Html.DisplayNameFor(model => model.Product.Content)
+            </p>
+            <p>
+                @Html.Raw(Model.Product.Content)
+            </p>
+        </div>
+        
+    </div>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Product.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -1,0 +1,95 @@
+﻿@model t02_ShopCMS.Models.Product
+
+@{
+    ViewData["Title"] = "Create";
+}
+<link href="~/css/editor.css" rel="stylesheet">
+<h1>Create</h1>
+
+<h4>Product</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create" enctype="multipart/form-data" class="form-row">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*類別*@
+            <div class="form-group col-4">
+                <label asp-for="CategoryId" class="control-label"></label>  
+                <select class="form-control" asp-for="CategoryId" asp-items="ViewBag.Categories"></select>
+            </div>
+            @*名稱*@
+            <div class="form-group col-4">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            @*圖片*@
+            <div class="form-group col-4">
+                <label asp-for="Image" class="control-label"></label>  
+                <input type="file" class="form-control-file"  name="myImg" id="inputImg" >
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+            @*簡介*@
+            <div class="form-group col-8" >
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="6"></textarea>
+            </div>
+            <div class="col-4">
+                <img id="preview" class="img-fluid mx-auto d-block" style="height:200px;"/>
+            </div>
+            @*價格*@
+            <div class="form-group col-6">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            @*庫存*@
+            <div class="form-group col-6">
+                <label asp-for="Stock" class="control-label"></label>  
+                <input asp-for="Stock" class="form-control" />
+            </div>
+            @*內容*@
+            <div class="form-group col-12">
+                <label asp-for="Content" class="control-label"></label>
+                <textarea asp-for="Content" class="form-control" id="editor"></textarea>
+            </div>
+            
+            
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+    $('#inputImg').on('change',function(e){
+        const file = this.files[0];
+        //用crateObjectURL產生圖片URL
+        const objectURL=URL.createObjectURL(file);
+        $('#preview').attr('src',objectURL);
+    })
+    </script>
+    
+    <script src="~/lib/ckeditor5/build/ckeditor.js"></script>
+
+    <script>
+        ClassicEditor
+            .create( document.querySelector( '#editor' ) )
+            .then( editor => {
+                console.log( editor );
+            } )
+            .catch( error => {
+                console.error( error );
+            } );
+
+    </script>
+
+}
