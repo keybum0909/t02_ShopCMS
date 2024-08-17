@@ -1,4 +1,4 @@
-﻿@model t02_ShopCMS.Models.DetailViewModel
+﻿@model t02_ShopCMS.Models.Editresp
 
 @{
     ViewData["Title"] = "Edit";
@@ -16,7 +16,7 @@
             @*類別*@
             <div class="form-group col-4">
                 <label asp-for="Product.CategoryId" class="control-label"></label>  
-                <select class="form-control" asp-for="Product.CategoryId" asp-items="ViewBag.Categories"></select>
+                <select class="form-control" asp-for="Product.CategoryId" asp-items="Model.CategoryList"></select>
             </div>
             @*名稱*@
             <div class="form-group col-4">

@@ -52,8 +52,14 @@ namespace t02_ShopCMS.Data
                     .HasComment("產品庫存");
 
                 entity.Property(e => e.Image)
+                    .IsRequired()
                     .HasConversion<byte[]>()
                     .HasComment("產品圖片");
+
+                entity.Property(e => e.CreateTime)
+                    .IsRequired()
+                    .HasConversion<DateTime>()
+                    .HasComment("產品新增時間");
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Products)
