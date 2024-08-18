@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -11,7 +13,7 @@ using t02_ShopCMS.Models;
 
 namespace t02_ShopCMS.Services
 {
-    public class ProductsService: IProductsService
+    public class ProductsService : IProductsService
     {
         private readonly t02_ShopCMSContext _context;
 
@@ -56,6 +58,40 @@ namespace t02_ShopCMS.Services
             return result;
         }
 
+        public async Task<bool> Create(Product product, IFormFile myImg)
+        {
+            // 限制允許的圖片格式 (MIME 類型)
+            var allowedImageFormats = new List<string> { "image/jpeg", "image/png", "image/gif", "image/svg" };
+
+            if (myImg != null && allowedImageFormats.Contains(myImg.ContentType))
+            {
+                // 用 IFormFile myImg 欄位接收檔案
+                // 用 MemoryStream 把檔案轉成 Byte 陣列
+                using (MemoryStream ms = new())
+                {
+                    await myImg.CopyToAsync(ms);  // 使用非同步方法
+                    product.Image = ms.ToArray();
+                }
+            }
+
+            // 新增商品時間
+            product.CreateTime = DateTime.Now;
+
+            try
+            {
+                // 將資料新增到資料庫
+                _context.Add(product);
+                await _context.SaveChangesAsync();  // 使用非同步保存變更
+                return true;  // 表示操作成功
+            }
+            catch (Exception)
+            {
+                // 這裡你可以記錄日誌或處理異常
+                return false;  // 表示操作失敗
+            }
+        }
+
+
         public async Task<Editresp> Edit(int? id)
         {
             DateTime pastDays = DateTime.Now.AddDays(-14);
@@ -84,12 +120,12 @@ namespace t02_ShopCMS.Services
                     CategoryList = [.. _context.Category.Select(c => new SelectListItem
                     {
                         Text = c.Name,
-                        Value = c.Id.ToString() 
+                        Value = c.Id.ToString()
                     })]
                 };
                 return res;
             }
-            
+
             return res;
         }
 
@@ -103,5 +139,5 @@ namespace t02_ShopCMS.Services
 
     }
 
-    
+
 }

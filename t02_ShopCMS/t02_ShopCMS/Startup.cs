@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using t02_ShopCMS.Data;
+using t02_ShopCMS.Services;
 
 namespace t02_ShopCMS
 {
@@ -29,6 +30,7 @@ namespace t02_ShopCMS
 
             services.AddDbContext<t02_ShopCMSContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("t02_ShopCMSContext")));
+            services.AddScoped<IProductsService, ProductsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -51,7 +51,7 @@ namespace t02_ShopCMS.Controllers
             else
             {
                 dvm.Product = product;
-                if(product.Image != null)
+                if (product.Image != null)
                 {
                     dvm.Imgsrc = ViewImage(product.Image);
                 }
@@ -81,32 +81,13 @@ namespace t02_ShopCMS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Product product, IFormFile myImg)
         {
-
             //IFormFile name對應input type=file的name屬性)
             if (ModelState.IsValid)
             {
-                if(myImg != null)
-                {
-                    //用IFormFile myimg欄位接收檔案
-                    //用MemoryStream()把檔案轉成Byte陣列
-                    using(var ms=new MemoryStream())
-                    {
-                        myImg.CopyTo(ms);
-                        product.Image = ms.ToArray();
-                    }
-                }
-
-                product.CreateTime = DateTime.Now;
-
-                //對資料庫新增資料
-                _context.Add(product);
-                //儲存資料
-                await _context.SaveChangesAsync();
-                //重新路由
+                var newProduct = await _productsService.Create(product, myImg);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Categories"] = new SelectList(_context.Set<Category>(), "Id", "Name", product.CategoryId);
-
             return View(product);
         }
 
@@ -114,11 +95,11 @@ namespace t02_ShopCMS.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             var result = await _productsService.Edit(id);
-            if(result.Product == null)
+            if (result.Product == null)
             {
                 // 設置錯誤訊息
                 ViewBag.ErrorMessage = "此商品於兩周內上架，不可編輯";
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             return View(result);
         }
@@ -153,7 +134,7 @@ namespace t02_ShopCMS.Controllers
                             }
                         }
                     }
-                        _context.Update(dvm.Product);
+                    _context.Update(dvm.Product);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
