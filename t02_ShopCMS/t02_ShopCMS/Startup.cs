@@ -31,6 +31,7 @@ namespace t02_ShopCMS
             services.AddDbContext<t02_ShopCMSContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("t02_ShopCMSContext")));
             services.AddScoped<IProductsService, ProductsService>();
+            services.AddScoped<IShipmentService, ShipmentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

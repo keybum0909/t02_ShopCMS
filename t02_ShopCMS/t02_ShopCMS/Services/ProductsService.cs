@@ -22,7 +22,7 @@ namespace t02_ShopCMS.Services
             _context = context;
         }
 
-        public async Task<Indexresp> Index(string searchString, string currentFilter, int? pageNumber)
+        public async Task<Indexresp> Index(string searchString)
         {
             //點選分類後出現的產品
             IQueryable<Product> categoryProducts = _context.Product.Include(p => p.Category).AsQueryable();
@@ -58,6 +58,21 @@ namespace t02_ShopCMS.Services
             return result;
         }
 
+        public async Task<List<Product>> CategoryFilter(int id)
+        {
+            if(id == 1)
+            {
+                var result = await _context.Product.ToListAsync();
+                return result;
+            }
+            else
+            {
+                var result = await _context.Product.Where(x => x.CategoryId == id).ToListAsync();
+                return result;
+            }
+            
+        }
+
         public async Task<bool> Create(Product product, IFormFile myImg)
         {
             // 限制允許的圖片格式 (MIME 類型)
@@ -69,7 +84,7 @@ namespace t02_ShopCMS.Services
                 // 用 MemoryStream 把檔案轉成 Byte 陣列
                 using (MemoryStream ms = new())
                 {
-                    await myImg.CopyToAsync(ms);  // 使用非同步方法
+                    await myImg.CopyToAsync(ms);  
                     product.Image = ms.ToArray();
                 }
             }
@@ -81,13 +96,12 @@ namespace t02_ShopCMS.Services
             {
                 // 將資料新增到資料庫
                 _context.Add(product);
-                await _context.SaveChangesAsync();  // 使用非同步保存變更
-                return true;  // 表示操作成功
+                await _context.SaveChangesAsync();
+                return true;
             }
             catch (Exception)
             {
-                // 這裡你可以記錄日誌或處理異常
-                return false;  // 表示操作失敗
+                return false;
             }
         }
 
