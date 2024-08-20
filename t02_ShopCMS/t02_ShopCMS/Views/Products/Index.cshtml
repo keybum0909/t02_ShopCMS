@@ -20,9 +20,14 @@
     <div class="row col-md-12">
         <button class="add-product">+ 新增產品</button>
     </div>
-    <div class="col-md-3 categories-container"></div>
+    <div class="col-md-3 categories-container">
+        @foreach (var item in Model.Categories)
+        {
+            <button class="categories-btn" data-id="@item.Id" data-name="@item.Name">@item.Name</button>
+        }
+    </div>
     <div class="row col-md-9">
-        <div class="row">
+        <div class="row product-area">
             @foreach (var item in Model.Products)
             {
                 <div class="col-md-4 product-list"
@@ -31,7 +36,7 @@
                      data-name="@item.Name"
                      data-description="@item.Description">
                     <img id="@item.Id" />
-                    <div class="col-md-12 category-name">
+                    <div class="col-md-12 category-name d-inline">
                         @item.Category.Name
                     </div>
                     <div>
@@ -40,6 +45,7 @@
                     <div class="category-description">
                         @item.Description
                     </div>
+                    <button class="add-shipment">+</button>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                     @if (ViewBag.ErrorMessage != null)
                     {
@@ -54,31 +60,98 @@
 </div>
 @section Scripts {
     <script>
-        const productsArr = '@Html.Raw(Model.Products)';
+
         const categoriesArr = '@Html.Raw(Model.Categories)';
-        console.log(productsArr, categoriesArr)
+        console.log(categoriesArr)
         
         $(document).ready(function () {
-            showImage();
-            showCategory();
+            // showImage();
         });
 
-        function showImage() {
-            productsArr.forEach(row => {
-                const imgElem = document.getElementById(row.Id);
-                if (imgElem && imgElem.tagName.toLowerCase() === 'img') {
-                    imgElem.setAttribute('src', "data:image/jpg;base64," + row.Image);
-                }
-            });
-        }
-    
-        function showCategory() {
-            const template = (categoryName) => `<button class="categories-btn">${categoryName}</button>`;
+        // function showImage() {
+        //     productsArr.forEach(row => {
+        //         const imgElem = document.getElementById(row.Id);
+        //         if (imgElem && imgElem.tagName.toLowerCase() === 'img') {
+        //             imgElem.setAttribute('src', "data:image/jpg;base64," + row.Image);
+        //         }
+        //     });
+        // }
 
-            categoriesArr.forEach(element => {
-                const categoriesBtn = template(element.Name);
-                $(".categories-container").append(categoriesBtn);
+        $('.categories-btn').on('click', function () {
+            
+            const id = $(this).attr('data-id');
+
+            fetch(`/Products/CategoryFilter?id=${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('成功:', result);
+                $('.product-area').empty();
+
+                result.forEach(product => {
+                    $('.product-area').append(`
+                        <div class="col-md-4 product-list">
+                            <img id="${product.id}" />
+                            <div class="col-md-12 category-name">
+                                ${name}
+                            </div>
+                            <div>
+                                ${product.name}
+                            </div>
+                            <div class="category-description">
+                                ${product.description}
+                            </div>
+                            <a asp-action="Edit" asp-route-id="${product.id}">Edit</a>
+                        </div>
+                    `);
+                });
+
+            })
+            .catch(error => {
+                console.error('錯誤:', error);
             });
-        }
+        });
+
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     document.querySelectorAll('.add-shipment').forEach(button => {
+        //         button.addEventListener('click', function (event) {
+        //             event.preventDefault();
+
+        //             const productDiv = this.closest('.product-list');
+
+        //             const productName = productDiv.getAttribute('data-name');
+        //             const productCategory = productDiv.getAttribute('data-category-name');
+                    
+        //             const amount = 1;
+
+        //             fetch('/Shipment/Index', {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'Content-Type': 'application/json',
+        //                 },
+        //                 body: JSON.stringify({
+        //                     productName: productName,
+        //                     amount: amount,
+        //                     productCategory: productCategory
+        //                 })
+        //             })
+        //                 .then(response => response)
+        //                 .then(data => {
+        //                     if (data.success) {
+        //                         window.location.href = "/Shipment/Index";
+        //                     } else {
+        //                         alert('加入購物車發生錯誤');
+        //                     }
+        //                 })
+        //                 .catch(error => console.error('Error:', error));
+        //         });
+        //     });
+        // });
+
+    
     </script>
 }

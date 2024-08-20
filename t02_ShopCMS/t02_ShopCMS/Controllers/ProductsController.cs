@@ -10,6 +10,7 @@ using t02_ShopCMS.Data;
 using t02_ShopCMS.Models;
 using t02_ShopCMS.Services;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 
 namespace t02_ShopCMS.Controllers
 {
@@ -25,10 +26,17 @@ namespace t02_ShopCMS.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index(string searchString, string currentFilter, int? pageNumber)
+        public async Task<IActionResult> Index(string searchString)
         {
-            var result = await _productsService.Index(searchString, currentFilter, pageNumber);
+            var result = await _productsService.Index(searchString);
             return View(result);
+        }
+
+        [HttpPost]
+        public async Task<List<Product>> CategoryFilter(int id)
+        {
+            var result = await _productsService.CategoryFilter(id);
+            return result;
         }
 
         // GET: Products/Details/5

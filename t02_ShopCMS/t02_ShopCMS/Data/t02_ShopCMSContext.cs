@@ -17,6 +17,7 @@ namespace t02_ShopCMS.Data
         //Table代理人
         public DbSet<t02_ShopCMS.Models.Product> Product { get; set; }
         public DbSet<t02_ShopCMS.Models.Category> Category { get; set; }
+        public DbSet<t02_ShopCMS.Models.ShipmentList> ShipmentList { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -80,6 +81,39 @@ namespace t02_ShopCMS.Data
                     .IsRequired()
                     .HasMaxLength(50)
                     .HasComment("類別名稱");
+            });
+
+            modelBuilder.Entity<ShipmentList>(entity =>
+            {
+                entity.ToTable("ShipmentList");
+
+                entity.Property(e => e.Id)
+                    .IsRequired()
+                    .HasComment("出貨編號");
+
+                entity.Property(e => e.OrderNumber)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasComment("出貨單號");
+
+                entity.Property(e => e.ProductName)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasComment("出貨商品名稱");
+
+                entity.Property(e => e.Amount)
+                    .IsRequired()
+                    .HasComment("出貨商品數量");
+
+                entity.Property(e => e.ProductCategory)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasComment("出貨商品類別");
+
+                entity.Property(e => e.CreateTime)
+                    .IsRequired()
+                    .HasConversion<DateTime>()
+                    .HasComment("產品新增時間");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace t02_ShopCMS.Models
 {
-
-    //table1
     public class Product
     {
         public int Id { get; set; }
@@ -25,6 +23,4 @@ namespace t02_ShopCMS.Models
         public virtual Category Category { get; set; }
     }
 
-    //table2
-    
 }
