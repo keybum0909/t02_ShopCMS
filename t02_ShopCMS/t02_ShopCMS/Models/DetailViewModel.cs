@@ -6,7 +6,7 @@ namespace t02_ShopCMS.Models
 {
     public class DetailViewModel
     {
-        public Product Product { get; set; }
+        public Models.Product Product { get; set; }
         public string Imgsrc { get; set; }
     }
 }

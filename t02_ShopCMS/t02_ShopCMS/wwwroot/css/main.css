@@ -1,4 +1,4 @@
-﻿.add-product { background-color: #14527C; color: #eee; }
+﻿.add-product { background-color: #14527C; color: #eee; margin-bottom: 5px; }
 
 .categories-btn { background-color: #142E7C; color: #eee; margin-bottom: 5px; }
 
@@ -7,3 +7,8 @@
 .category-name {  background-color: #142E7C; color: #eee; }
 img {height: 100px; width: 200px; margin-top: 10px; display: flex; justify-content: center; }
 .category-description { font-size: 12px; margin-bottom: 10px; }
+
+/*Create*/
+
+/*Shipment*/
+.shipment-list { display: flex; align-items: center; justify-content:center; }

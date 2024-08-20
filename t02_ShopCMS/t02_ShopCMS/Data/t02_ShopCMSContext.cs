@@ -15,9 +15,9 @@ namespace t02_ShopCMS.Data
         }
 
         //Table代理人
-        public DbSet<t02_ShopCMS.Models.Product> Product { get; set; }
-        public DbSet<t02_ShopCMS.Models.Category> Category { get; set; }
-        public DbSet<t02_ShopCMS.Models.ShipmentList> ShipmentList { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<Category> Category { get; set; }
+        public DbSet<ShipmentList> ShipmentList { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,12 +35,10 @@ namespace t02_ShopCMS.Data
                     .HasComment("產品名稱");
 
                 entity.Property(e => e.Description)
-                    .IsRequired()
                     .HasMaxLength(255)
-                    .HasComment("產品介紹");
+                    .HasComment("產品說明");
 
                 entity.Property(e => e.Content)
-                    .IsRequired()
                     .HasMaxLength(255)
                     .HasComment("產品內容");
 
@@ -61,6 +59,11 @@ namespace t02_ShopCMS.Data
                     .IsRequired()
                     .HasConversion<DateTime>()
                     .HasComment("產品新增時間");
+
+                entity.Property(e => e.CanOrder)
+                    .IsRequired()
+                    .HasConversion<bool>()
+                    .HasComment("產品是否上架");
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Products)
@@ -105,7 +108,7 @@ namespace t02_ShopCMS.Data
                     .IsRequired()
                     .HasComment("出貨商品數量");
 
-                entity.Property(e => e.ProductCategory)
+                entity.Property(e => e.Category)
                     .IsRequired()
                     .HasMaxLength(50)
                     .HasComment("出貨商品類別");
