@@ -4,6 +4,6 @@
     {
         public string ProductName { get; set; }
         public int Amount { get; set; }
-        public string ProductCategory { get; set; }
+        public string Category { get; set; }
     }
 }

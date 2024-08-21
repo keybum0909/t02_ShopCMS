@@ -116,6 +116,7 @@
                             <div class="category-description">
                                 ${product.description}
                             </div>
+                            <button class="add-shipment">+</button>
                             <a asp-action="Edit" asp-route-id="${product.id}">Edit</a>
                         </div>
                     `);
@@ -139,14 +140,19 @@
 
                     const amount = 1;
 
-                    fetch('/Shipment/Index', {
+                    fetch('/Shipment/SaveData', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({ "ProductName": productName, "Amount": amount, "Category": productCategory })
                     })
-                        .then(response => response.json())
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok ' + response.statusText);
+                            }
+                            return response.json();
+                        })
                         .then(data => {
                             if (data.success) {
                                 window.location.href = "/Shipment/Index";

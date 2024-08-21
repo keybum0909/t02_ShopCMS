@@ -12,3 +12,4 @@ img {height: 100px; width: 200px; margin-top: 10px; display: flex; justify-conte
 
 /*Shipment*/
 .shipment-list { display: flex; align-items: center; justify-content:center; }
+.category-item { background: #5955C4; color: #eee; }
