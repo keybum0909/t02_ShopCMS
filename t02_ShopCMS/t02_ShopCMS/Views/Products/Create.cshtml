@@ -1,4 +1,4 @@
-﻿@model t02_ShopCMS.Models.Product
+﻿@model Product
 
 @{
     ViewData["Title"] = "Create";
@@ -9,45 +9,53 @@
 <h4>Product</h4>
 <hr />
 <div class="row">
-    <div class="col-md-12">
+    <span>文件影像管理及調閱系統</span>
+    <div class="col-md-12 row">
         <form asp-action="Create" enctype="multipart/form-data" class="form-row">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @*類別*@
-            <div class="form-group col-4">
+            <div class="form-group col-12">
                 <label asp-for="CategoryId" class="control-label"></label>  
                 <select class="form-control" asp-for="CategoryId" asp-items="ViewBag.Categories"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
             @*名稱*@
-            <div class="form-group col-4">
+            <div class="form-group col-12">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            @*圖片*@
-            <div class="form-group col-4">
-                <label asp-for="Image" class="control-label"></label>  
-                <input type="file" class="form-control-file"  name="myImg" id="inputImg" >
-                <span asp-validation-for="Image" class="text-danger"></span>
-            </div>
             @*簡介*@
-            <div class="form-group col-8" >
+            <div class="form-group col-12" >
                 <label asp-for="Description" class="control-label"></label>
                 <textarea asp-for="Description" class="form-control" rows="6"></textarea>
             </div>
-            <div class="col-4">
+            @*圖片*@
+            <div class="col-6">
                 <img id="preview" class="img-fluid mx-auto d-block" style="height:200px;"/>
             </div>
+            <div class="form-group col-12">
+                <label asp-for="Image" class="control-label"></label>
+                <input type="file" class="form-control-file" name="myImg" id="inputImg">
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
             @*價格*@
-            <div class="form-group col-6">
+            <div class="form-group col-12">
                 <label asp-for="Price" class="control-label"></label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
-
             @*庫存*@
-            <div class="form-group col-6">
+            <div class="form-group col-12">
                 <label asp-for="Stock" class="control-label"></label>  
                 <input asp-for="Stock" class="form-control" />
+                <span asp-validation-for="Stock" class="text-danger"></span>
+            </div>
+            @* 是否上架 *@
+            <div class="form-check form-switch col-12">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" name="isChecked" checked>
+                <label class="form-check-label" for="flexSwitchCheckChecked">是否上架</label>
+                <span asp-validation-for="CanOrder" class="text-danger"></span>
             </div>
             @*內容*@
             <div class="form-group col-12">

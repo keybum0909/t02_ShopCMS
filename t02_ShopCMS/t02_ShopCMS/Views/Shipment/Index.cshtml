@@ -7,12 +7,16 @@
 
 <h2>ShopCMS</h2>
 
-<div>
+<div class="row">
     <span>待出貨清單</span>
     <div class="row shipment-list">
-        <div class="row shipment-item">
-            <img />
-            <div>
+        <div class="form-check col-1">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault"></label>
+        </div>
+        <div class="row shipment-item col-11">
+            <img class="col-2" />
+            <div class="col-5">
                 <div>
                     categoryName
                 </div>
@@ -20,19 +24,50 @@
                     productName
                 </div>
             </div>
-            <div class="row">
-                <button>-</button>
-                <div>1</div>
-                <button>+</button>
+            <div class="row col-3">
+                <form id='myform' method='POST' action='#'>
+                    <input type='button' value='-' class='qtyminus' field='quantity' />
+                    <input type='text' name='quantity' value='0' class='qty' />
+                    <input type='button' value='+' class='qtyplus' field='quantity' />
+                </form>
             </div>
-            <div>
-                <button>刪除</button>
+            <div class="col-1">
+                <input type="button" value="刪除" class="btn-danger btn" />
             </div>
         </div>
-        <button>出貨</button>
     </div>
-    
+    <div>
+        <input type="submit" value="出貨" class="add-product btn" />
+    </div>
 </div>
+@section Scripts {
 <script>
+    $(function () {
+        $('.qtyplus').click(function (e) {
+            e.preventDefault();
+            fieldName = $(this).attr('field');
+                
+            var currentVal = parseInt($('input[name=' + fieldName + ']').val());
+                
+            if (!isNaN(currentVal)) {
+                $('input[name=' + fieldName + ']').val(currentVal + 1);
+            } else {
+                $('input[name=' + fieldName + ']').val(0);
+            }
+        });
+        $(".qtyminus").click(function (e) {
+            e.preventDefault();
+            fieldName = $(this).attr('field');
+                
+            var currentVal = parseInt($('input[name=' + fieldName + ']').val());
+                
+            if (!isNaN(currentVal) && currentVal > 0) {
+                $('input[name=' + fieldName + ']').val(currentVal - 1);
+            } else {
+                $('input[name=' + fieldName + ']').val(0);
+            }
+        });
+    });
 
 </script>
+}

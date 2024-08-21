@@ -15,6 +15,8 @@ namespace t02_ShopCMS.Models
         public int Stock { get; set; }              //庫存
         public byte[] Image { get; set; }           //圖片
         public DateTime CreateTime { get; set; }
+
+        public bool CanOrder { get; set; }
         //EF core 會自訂建立FG
         [Display(Name = "Category")]
         public int CategoryId { get; set; } //類別(Foreign Key)

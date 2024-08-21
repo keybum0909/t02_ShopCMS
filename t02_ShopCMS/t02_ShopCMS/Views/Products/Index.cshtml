@@ -4,26 +4,37 @@
 }
 
 <h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-    /
-    <a asp-action="CreateCategory">Create Category</a>
-</p>
-<form asp-action="Index" method="get" class="col-4 mb-3">
-    <div class="input-group input-group-sm ">
-        <input class="form-control" type="text" placeholder="Name" name="searchString" />
-        <input class="btn btn-sm btn-primary" type="submit" value="Search" />
+<div class="col-md-12 row">
+    <form asp-action="Index" method="get" class="col-4">
+        <div class="input-group input-group-sm ">
+            <input class="form-control" type="text" placeholder="Name" name="searchString" />
+            <input class="btn btn-sm btn-primary" type="submit" value="Search" />
+        </div>
+    </form>
+    <div>
+        <a asp-controller="Shipment" asp-action="Index">
+            <input type="submit" value="待出貨清單" class="btn" />
+        </a>
     </div>
-</form>
+</div>
+
 <div class="row">
-    <div class="row col-md-12">
-        <button class="add-product">+ 新增產品</button>
+    <div class="row col-md-12 d-inline">
+        <div class="form-group">
+            <a asp-action="Create">
+                <input type="submit" value="+ 新增產品" class="add-product btn" />
+            </a>
+            <a asp-action="CreateCategory">
+                <input type="submit" value="+ 新增類別" class="add-product btn" />
+            </a>
+        </div>
     </div>
     <div class="col-md-3 categories-container">
         @foreach (var item in Model.Categories)
         {
-            <button class="categories-btn" data-id="@item.Id" data-name="@item.Name">@item.Name</button>
+            <div class="form-group">
+                <input class="categories-btn btn" type="submit" value="@item.Name" data-id="@item.Id" data-name="@item.Name" />
+            </div>
         }
     </div>
     <div class="row col-md-9">
@@ -96,7 +107,7 @@
                     $('.product-area').append(`
                         <div class="col-md-4 product-list">
                             <img id="${product.id}" />
-                            <div class="col-md-12 category-name">
+                            <div class="col-md-12 category-name d-inline">
                                 ${name}
                             </div>
                             <div>
@@ -116,41 +127,38 @@
             });
         });
 
-        // document.addEventListener('DOMContentLoaded', function () {
-        //     document.querySelectorAll('.add-shipment').forEach(button => {
-        //         button.addEventListener('click', function (event) {
-        //             event.preventDefault();
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.add-shipment').forEach(button => {
+                button.addEventListener('click', function (event) {
+                    event.preventDefault();
 
-        //             const productDiv = this.closest('.product-list');
+                    const productDiv = this.closest('.product-list');
 
-        //             const productName = productDiv.getAttribute('data-name');
-        //             const productCategory = productDiv.getAttribute('data-category-name');
-                    
-        //             const amount = 1;
+                    const productName = productDiv.getAttribute('data-name');
+                    const productCategory = productDiv.getAttribute('data-category-name');
 
-        //             fetch('/Shipment/Index', {
-        //                 method: 'POST',
-        //                 headers: {
-        //                     'Content-Type': 'application/json',
-        //                 },
-        //                 body: JSON.stringify({
-        //                     productName: productName,
-        //                     amount: amount,
-        //                     productCategory: productCategory
-        //                 })
-        //             })
-        //                 .then(response => response)
-        //                 .then(data => {
-        //                     if (data.success) {
-        //                         window.location.href = "/Shipment/Index";
-        //                     } else {
-        //                         alert('加入購物車發生錯誤');
-        //                     }
-        //                 })
-        //                 .catch(error => console.error('Error:', error));
-        //         });
-        //     });
-        // });
+                    const amount = 1;
+
+                    fetch('/Shipment/Index', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ "ProductName": productName, "Amount": amount, "Category": productCategory })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.href = "/Shipment/Index";
+                            } else {
+                                alert('加入購物車發生錯誤');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            });
+        });
+
 
     
     </script>
