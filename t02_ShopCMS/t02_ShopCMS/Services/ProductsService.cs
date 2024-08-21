@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using t02_ShopCMS.Data;
 using t02_ShopCMS.Models;
@@ -24,7 +22,6 @@ namespace t02_ShopCMS.Services
 
         public async Task<Indexresp> Index(string searchString)
         {
-            //點選分類後出現的產品
             IQueryable<Product> categoryProducts = _context.Product.Include(p => p.Category);
 
             if (!string.IsNullOrEmpty(searchString))

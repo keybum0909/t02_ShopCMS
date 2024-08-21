@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using t02_ShopCMS.Data;
 using t02_ShopCMS.Models;
-using t02_ShopCMS.Models.Shipment;
 
 namespace t02_ShopCMS.Services
 {
@@ -18,14 +17,24 @@ namespace t02_ShopCMS.Services
             _context = context;
         }
 
-        public async Task<List<ShipmentList>> Index([FromBody] Indexreq req)
+        public List<ShipmentList> Index()
+        {
+            var queryInitData = _context.ShipmentList.Select(x => new ShipmentList
+            {
+                Id = x.Id,
+                OrderNumber = x.OrderNumber,
+                ProductName = x.ProductName,
+                Amount = x.Amount,
+                Category = x.Category
+            }).ToList(); // 将 IQueryable 转换为 List
+
+            return queryInitData;
+        }
+
+        public async Task<List<ShipmentList>> SaveData([FromBody] SaveDatareq req)
         {
             bool ReadyInDatabase = _context.ShipmentList.Any(x => x.ProductName == req.ProductName);
-            if (ReadyInDatabase)
-            {
-                return await _context.ShipmentList.ToListAsync();
-            }
-            else
+            if (!ReadyInDatabase)
             {
                 var shipment = new ShipmentList
                 {
@@ -39,9 +48,10 @@ namespace t02_ShopCMS.Services
                 _context.ShipmentList.Add(shipment);
                 await _context.SaveChangesAsync();
 
-                return await _context.ShipmentList.ToListAsync();
             }
-            
+
+            return await _context.ShipmentList.ToListAsync();
+
         }
 
         private string GenerateOrderNumber(string Category)

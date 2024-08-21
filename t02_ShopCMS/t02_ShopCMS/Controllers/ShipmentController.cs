@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using t02_ShopCMS.Data;
 using t02_ShopCMS.Models;
-using t02_ShopCMS.Models.Shipment;
 using t02_ShopCMS.Services;
 
 namespace t02_ShopCMS.Controllers
@@ -21,19 +20,24 @@ namespace t02_ShopCMS.Controllers
             _shipmentService = provider.GetRequiredService<IShipmentService>();
         }
 
-        [HttpPost]
-        public IActionResult Index([FromBody] Indexreq req)
+        public IActionResult Index()
         {
-            var result = _shipmentService.Index(req);
-            if (result != null)
+            var result = _shipmentService.Index();
+            return View(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveData([FromBody] SaveDatareq req)
+        {
+            var result = await _shipmentService.SaveData(req);
+            if (result != null && result.Any())
             {
-                return View();
+                return Json(new { success = true });
             }
             else
             {
-                return RedirectToAction("Product/Index");
+                return Json(new { success = false });
             }
-            
         }
     }
 }
