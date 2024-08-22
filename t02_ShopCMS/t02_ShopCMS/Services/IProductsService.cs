@@ -14,5 +14,6 @@ namespace t02_ShopCMS.Services
 
 
         Task<Editresp> Edit(int? id);
+        Task<bool> DeleteConfirmed(int? id);
     }
 }

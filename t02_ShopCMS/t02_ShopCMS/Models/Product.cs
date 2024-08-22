@@ -23,6 +23,8 @@ namespace t02_ShopCMS.Models
 
 
         public virtual Category Category { get; set; }
+
+        public virtual List<ShipmentList> ShipmentLists { get; set; }
     }
 
 }

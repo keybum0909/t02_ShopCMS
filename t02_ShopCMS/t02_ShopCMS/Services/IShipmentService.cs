@@ -9,6 +9,7 @@ namespace t02_ShopCMS.Services
     public interface IShipmentService
     {
         List<ShipmentList> Index();
-        Task<List<ShipmentList>> SaveData([FromBody] SaveDatareq req);
+        Task<List<ShipmentList>> SaveOrder([FromBody] SaveDatareq req);
+        Task<bool> Delete(int? id);
     }
 }

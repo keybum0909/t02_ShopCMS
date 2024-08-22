@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,25 +20,28 @@ namespace t02_ShopCMS.Services
 
         public List<ShipmentList> Index()
         {
-            var queryInitData = _context.ShipmentList.Select(x => new ShipmentList
+            var queryInitData = _context.ShipmentList.OrderByDescending(x => x.CreateTime).Select(x => new ShipmentList
             {
                 Id = x.Id,
+                ProductId = x.ProductId,
                 OrderNumber = x.OrderNumber,
                 ProductName = x.ProductName,
                 Amount = x.Amount,
                 Category = x.Category
-            }).ToList(); // 将 IQueryable 转换为 List
+            }).ToList();
 
             return queryInitData;
         }
 
-        public async Task<List<ShipmentList>> SaveData([FromBody] SaveDatareq req)
+        public async Task<List<ShipmentList>> SaveOrder([FromBody] SaveDatareq req)
         {
             bool ReadyInDatabase = _context.ShipmentList.Any(x => x.ProductName == req.ProductName);
             if (!ReadyInDatabase)
             {
+                var orderProoductId = _context.Product.Where(x => x.Name == req.ProductName).Select(x => x.Id).FirstOrDefault();
                 var shipment = new ShipmentList
                 {
+                    ProductId = orderProoductId,
                     OrderNumber = GenerateOrderNumber(req.Category),
                     ProductName = req.ProductName,
                     Amount = req.Amount,
@@ -54,6 +58,18 @@ namespace t02_ShopCMS.Services
 
         }
 
+        public async Task<bool> Delete(int? id)
+        {
+            var shipmentResult = await _context.ShipmentList.FindAsync(id);
+            if(shipmentResult != null)
+            {
+                _context.ShipmentList.Remove(shipmentResult);
+                await _context.SaveChangesAsync();
+            }
+
+            return true;
+        }
+
         private string GenerateOrderNumber(string Category)
         {
             string timestamp = DateTime.Now.ToString("yyyyMMddHHmm");
@@ -63,7 +79,6 @@ namespace t02_ShopCMS.Services
             Random random = new Random();
             string randomDigits = random.Next(0, 100).ToString("D2");
 
-            // 合成訂單編號
             return $"{timestamp}{categoryCode}{randomDigits}";
         }
     }

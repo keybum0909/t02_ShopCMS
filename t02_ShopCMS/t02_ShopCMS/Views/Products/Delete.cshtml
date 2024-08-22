@@ -24,10 +24,72 @@
             @Html.DisplayFor(model => model.Price)
         </dd>
     </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+    <form method="post" id="deleteForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" id="Id" value="@Model.Id" />
+        <input type="submit" value="Delete" class="delete-btn btn btn-danger" data-id="@Model.Id" /> |
         <a asp-action="Index">Back to List</a>
     </form>
+    
 </div>
+@section Scripts {
+<script>
+    $('.delete-btn').on('click', function (e) {
+        e.preventDefault();
+
+        const id = $(this).attr('data-id');
+        const token = $('input[name="__RequestVerificationToken"]').val();
+
+        swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to recover your account!',
+            icon: 'warning',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+            showCancelButton: true,
+            closeModal: false,
+            allowOutsideClick: false,
+            closeOnConfirm: false,
+            closeOnCancel: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteData(id, token);
+            } else {
+                swal.fire({ title: "Your account is safe." });
+            }
+        });
+    });
+
+    function deleteData(id, token) {
+        fetch(`/Products/Delete?id=${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': token
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                swal.fire({ 
+                    title: "Your account has been deleted!",
+                    icon: "success",
+                }).then(() => {
+                    window.location.href = '/Products/Index';
+                });
+            } else {
+                swal.fire({
+                    title: "Error occurred while deleting your account.",
+                    icon: "error",
+                });
+            }
+        })
+        .catch(error => {
+            swal.fire({
+                title: "Error occurred: " + error.message,
+                icon: "error",
+            });
+        });
+    }
+</script>
+}

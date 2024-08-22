@@ -56,7 +56,10 @@
                     <div class="category-description">
                         @item.Description
                     </div>
-                    <button class="add-shipment">+</button>
+                    @if (item.CanOrder)
+                    {
+                        <button class="add-shipment">+</button>
+                    }
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                     @if (ViewBag.ErrorMessage != null)
                     {
@@ -64,6 +67,7 @@
                             @ViewBag.ErrorMessage
                         </div>
                     }
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </div>
             }
         </div>
@@ -140,7 +144,7 @@
 
                     const amount = 1;
 
-                    fetch('/Shipment/SaveData', {
+                    fetch('/Shipment/SaveOrder', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
