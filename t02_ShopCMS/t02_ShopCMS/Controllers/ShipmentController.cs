@@ -22,20 +22,35 @@ namespace t02_ShopCMS.Controllers
 
         public IActionResult Index()
         {
-            var result = _shipmentService.Index();
+            var result = _shipmentService.QueryInit();
             return View(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveData([FromBody] SaveDatareq req)
+        public async Task<IActionResult> SaveOrder([FromBody] SaveDatareq req)
         {
-            var result = await _shipmentService.SaveData(req);
-            if (result != null && result.Any())
+            var result = await _shipmentService.SaveOrder(req);
+            if (result != null && result.Count > 0)
             {
                 return Json(new { success = true });
             }
             else
             {
+                return Json(new { success = false });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            var result = await _shipmentService.Delete(id);
+            if (result == true)
+            {
+                return Json(new { success = true });
+            }
+            else
+            {
+                ViewBag.alertSign = "刪除商品發生錯誤";
                 return Json(new { success = false });
             }
         }

@@ -11,6 +11,7 @@ using t02_ShopCMS.Models;
 using t02_ShopCMS.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
+using t02_ShopCMS.Entity;
 
 namespace t02_ShopCMS.Controllers
 {
@@ -28,7 +29,7 @@ namespace t02_ShopCMS.Controllers
         // GET: Products
         public async Task<IActionResult> Index(string searchString)
         {
-            var result = await _productsService.Index(searchString);
+            var result = await _productsService.QueryInit(searchString);
             return View(result);
         }
 
@@ -183,12 +184,18 @@ namespace t02_ShopCMS.Controllers
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            var product = await _context.Product.FindAsync(id);
-            _context.Product.Remove(product);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var result = await _productsService.DeleteConfirmed(id);
+            if(result == true)
+            {
+                return Json(new { success = true });
+            }
+            else
+            {
+                return Json(new { success = false });
+            }
+            
         }
 
         private bool ProductExists(int id)

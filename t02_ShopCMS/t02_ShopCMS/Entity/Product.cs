@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace t02_ShopCMS.Models
+namespace t02_ShopCMS.Entity
 {
     public class Product
     {
@@ -23,6 +23,8 @@ namespace t02_ShopCMS.Models
 
 
         public virtual Category Category { get; set; }
+
+        public virtual List<ShipmentList> ShipmentLists { get; set; }
     }
 
 }

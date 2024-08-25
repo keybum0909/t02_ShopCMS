@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using t02_ShopCMS.Data;
+using t02_ShopCMS.Entity;
 using t02_ShopCMS.Models;
 
 namespace t02_ShopCMS.Services
@@ -20,7 +22,7 @@ namespace t02_ShopCMS.Services
             _context = context;
         }
 
-        public async Task<Indexresp> Index(string searchString)
+        public async Task<Indexresp> QueryInit(string searchString)
         {
             IQueryable<Product> categoryProducts = _context.Product.Include(p => p.Category);
 
@@ -29,20 +31,10 @@ namespace t02_ShopCMS.Services
                 categoryProducts = categoryProducts.Where(s => s.Name.Contains(searchString));
             }
 
-            List<Product> searchResult = [.. categoryProducts.Select(p => new Product
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
-                Content = p.Content,
-                Price = p.Price,
-                Stock = p.Stock,
-                Image = p.Image
-            })];
+            List<Product> searchResult = categoryProducts.ToList();
 
-            //讀取產品
             var products = await _context.Product.ToListAsync();
-            //讀取分類類別
+            
             var categories = await _context.Category.ToListAsync();
 
             Indexresp result = new()
@@ -72,13 +64,10 @@ namespace t02_ShopCMS.Services
 
         public async Task<bool> Create(Product product, IFormFile myImg)
         {
-            // 限制允許的圖片格式 (MIME 類型)
             var allowedImageFormats = new List<string> { "image/jpeg", "image/png", "image/gif", "image/svg" };
 
             if (myImg != null && allowedImageFormats.Contains(myImg.ContentType))
             {
-                // 用 IFormFile myImg 欄位接收檔案
-                // 用 MemoryStream 把檔案轉成 Byte 陣列
                 using (MemoryStream ms = new())
                 {
                     await myImg.CopyToAsync(ms);  
@@ -86,12 +75,10 @@ namespace t02_ShopCMS.Services
                 }
             }
 
-            // 新增商品時間
             product.CreateTime = DateTime.Now;
 
             try
             {
-                // 將資料新增到資料庫
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return true;
@@ -140,9 +127,32 @@ namespace t02_ShopCMS.Services
             return res;
         }
 
+        public async Task<bool> DeleteConfirmed(int? id)
+         {
+            var product = await _context.Product.FindAsync(id);
+            if (product != null)
+            {
+                var shipmentLists = _context.ShipmentList.Where(s => s.ProductId == id);
+                _context.ShipmentList.RemoveRange(shipmentLists);
+
+                _context.Product.Remove(product);
+                await _context.SaveChangesAsync();
+
+            }
+
+
+            var shipOrder = await _context.ShipmentList.FirstOrDefaultAsync(m => m.ProductId == id);
+            if (shipOrder != null)
+            {
+                _context.ShipmentList.Remove(shipOrder);
+                await _context.SaveChangesAsync();
+            }
+
+            return true;
+        }
+
         private string ViewImage(byte[] arrayImage)
         {
-            //二進制圖檔轉字串
             string base64String = Convert.ToBase64String(arrayImage, 0, arrayImage.Length);
 
             return "data:image/png;base64," + base64String;

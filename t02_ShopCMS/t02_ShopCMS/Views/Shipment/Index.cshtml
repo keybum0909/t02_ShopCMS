@@ -1,4 +1,4 @@
-﻿@model IEnumerable<t02_ShopCMS.Models.ShipmentList>
+﻿@model IEnumerable<t02_ShopCMS.Entity.ShipmentList>
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -26,6 +26,9 @@
                     <div data-ProductName="@item.ProductName">
                         @item.ProductName
                     </div>
+                    <div data-OrderNumber="@item.OrderNumber">
+                        訂單編號:  @item.OrderNumber
+                    </div>
                 </div>
                 <div class="row col-3">
                     <form id='myform' method='POST' action='#'>
@@ -34,8 +37,8 @@
                         <input type='button' value='+' class='qtyplus' field='quantity' />
                     </form>
                 </div>
-                <div class="col-1">
-                    <input type="button" value="刪除" class="btn-danger btn" />
+                <div class="col-1 form-group">
+                    <input type="submit" value="Delete" class="delete-btn btn-danger btn" data-id="@item.Id" />
                 </div>
             </div>
          }
@@ -79,6 +82,27 @@
                 }
             });
     });
+
+    $('.delete-btn').on('click', function () {
+        const id = $(this).attr('data-id');
+        console.log(id)
+
+        fetch(`/Shipment/Delete?id=${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then(result => {
+                console.log('成功:', result);
+                location.reload();
+
+            })
+            .catch(error => {
+                console.error('錯誤:', error);
+            });
+    })
 
 </script>
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using t02_ShopCMS.Models;
+using t02_ShopCMS.Entity;
 
 namespace t02_ShopCMS.Data
 {
@@ -117,6 +117,11 @@ namespace t02_ShopCMS.Data
                     .IsRequired()
                     .HasConversion<DateTime>()
                     .HasComment("產品新增時間");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ShipmentLists)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("FK_Product_ShipmentList");
             });
 
             OnModelCreatingPartial(modelBuilder);

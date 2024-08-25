@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using t02_ShopCMS.Entity;
 
 namespace t02_ShopCMS.Models
 {
