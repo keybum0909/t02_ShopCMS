@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using t02_ShopCMS.Data;
+using t02_ShopCMS.Entity;
 using t02_ShopCMS.Models;
 
 namespace t02_ShopCMS.Services
@@ -18,7 +19,7 @@ namespace t02_ShopCMS.Services
             _context = context;
         }
 
-        public List<ShipmentList> Index()
+        public List<ShipmentList> QueryInit()
         {
             var queryInitData = _context.ShipmentList.OrderByDescending(x => x.CreateTime).Select(x => new ShipmentList
             {

@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using t02_ShopCMS.Data;
+using t02_ShopCMS.Entity;
 using t02_ShopCMS.Models;
 
 namespace t02_ShopCMS.Services
@@ -21,7 +22,7 @@ namespace t02_ShopCMS.Services
             _context = context;
         }
 
-        public async Task<Indexresp> Index(string searchString)
+        public async Task<Indexresp> QueryInit(string searchString)
         {
             IQueryable<Product> categoryProducts = _context.Product.Include(p => p.Category);
 
@@ -30,17 +31,7 @@ namespace t02_ShopCMS.Services
                 categoryProducts = categoryProducts.Where(s => s.Name.Contains(searchString));
             }
 
-            List<Product> searchResult = [.. categoryProducts.Select(p => new Product
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
-                Content = p.Content,
-                Price = p.Price,
-                Stock = p.Stock,
-                Image = p.Image,
-                CanOrder = p.CanOrder,
-            })];
+            List<Product> searchResult = categoryProducts.ToList();
 
             var products = await _context.Product.ToListAsync();
             

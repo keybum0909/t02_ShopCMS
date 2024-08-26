@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace t02_ShopCMS.Models
+namespace t02_ShopCMS.Entity
 {
     public class ShipmentList
     {

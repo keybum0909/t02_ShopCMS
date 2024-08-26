@@ -22,7 +22,7 @@ namespace t02_ShopCMS.Controllers
 
         public IActionResult Index()
         {
-            var result = _shipmentService.Index();
+            var result = _shipmentService.QueryInit();
             return View(result);
         }
 

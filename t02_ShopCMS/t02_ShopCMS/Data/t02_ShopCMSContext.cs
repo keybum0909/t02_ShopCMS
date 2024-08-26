@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using t02_ShopCMS.Models;
+using t02_ShopCMS.Entity;
 
 namespace t02_ShopCMS.Data
 {
