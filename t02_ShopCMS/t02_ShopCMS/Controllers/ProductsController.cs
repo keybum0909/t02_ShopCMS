@@ -43,38 +43,10 @@ namespace t02_ShopCMS.Controllers
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            DetailViewModel dvm = new DetailViewModel();
-            var product = await _context.Product
-                            .Include(p => p.Category)
-                            .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (product == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                dvm.Product = product;
-                if (product.Image != null)
-                {
-                    dvm.Imgsrc = ViewImage(product.Image);
-                }
-            }
-            return View(dvm);
+            var reslut = await _productsService.Details(id);
+            return View(reslut);
         }
 
-        private string ViewImage(byte[] arrayImage)
-        {
-            //二進制圖檔轉字串
-            string base64String = Convert.ToBase64String(arrayImage, 0, arrayImage.Length);
-
-            return "data:image/png;base64," + base64String;
-        }
         // GET: Products/Create
         public IActionResult Create()
         {
@@ -106,8 +78,6 @@ namespace t02_ShopCMS.Controllers
             var result = await _productsService.Edit(id);
             if (result.Product == null)
             {
-                // 設置錯誤訊息
-                ViewBag.ErrorMessage = "此商品於兩周內上架，不可編輯";
                 return RedirectToAction(nameof(Index));
             }
             return View(result);
@@ -166,19 +136,8 @@ namespace t02_ShopCMS.Controllers
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var product = await _context.Product
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return View(product);
+            var result = await _productsService.Delete(id);
+            return View(result);
         }
 
         // POST: Products/Delete/5
