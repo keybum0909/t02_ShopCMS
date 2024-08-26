@@ -62,6 +62,29 @@ namespace t02_ShopCMS.Services
             
         }
 
+        public async Task<DetailViewModel> Details(int? id)
+        {
+            DetailViewModel dvm = new();
+            if (id != null)
+            {
+                var product = await _context.Product
+                                .Include(p => p.Category)
+                                .FirstOrDefaultAsync(m => m.Id == id);
+                if (product != null)
+                {
+                    dvm.Product = product;
+                    if (product.Image != null)
+                    {
+                        dvm.Imgsrc = ViewImage(product.Image);
+                    }
+                }
+
+            }
+
+            var result = dvm;
+            return result;
+        }
+
         public async Task<bool> Create(Product product, IFormFile myImg)
         {
             var allowedImageFormats = new List<string> { "image/jpeg", "image/png", "image/gif", "image/svg" };
@@ -125,6 +148,13 @@ namespace t02_ShopCMS.Services
             }
 
             return res;
+        }
+
+        public async Task<Product> Delete(int? id)
+        {
+            var product = await _context.Product
+            .FirstOrDefaultAsync(m => m.Id == id);
+            return product;
         }
 
         public async Task<bool> DeleteConfirmed(int? id)

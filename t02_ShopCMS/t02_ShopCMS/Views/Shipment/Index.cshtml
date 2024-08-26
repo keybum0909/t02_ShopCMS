@@ -13,27 +13,24 @@
     <div class="row shipment-list">
         @foreach (var item in Model)
         {
-            <div class="form-check col-1">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            <div class="form-check col-1" data-id="@item.Id">
+                <input class="form-check-input order-box" type="checkbox" value="" id="flexCheckDefault">
                 <label class="form-check-label" for="flexCheckDefault"></label>
             </div>
             <div class="row shipment-item col-11">
                 <img class="col-2" />
                 <div class="col-5">
-                    <div class="category-item d-inline" data-Category="@item.Category">
+                    <div class="category-item d-inline" data-category="@item.Category">
                         @item.Category
                     </div>
-                    <div data-ProductName="@item.ProductName">
+                    <div data-product-name="@item.ProductName">
                         @item.ProductName
-                    </div>
-                    <div data-OrderNumber="@item.OrderNumber">
-                        訂單編號:  @item.OrderNumber
                     </div>
                 </div>
                 <div class="row col-3">
                     <form id='myform' method='POST' action='#'>
                         <input type='button' value='-' class='qtyminus' field='quantity' />
-                        <input type='text' name='quantity' value='@item.Amount' class='qty' data-Amount="@item.Amount" data-Id="@item.Id" />
+                        <input type='text' name='quantity' value='@item.Amount' class='qty' name="@item.Amount" data-amount="@item.Amount" data-id="@item.Id" />
                         <input type='button' value='+' class='qtyplus' field='quantity' />
                     </form>
                 </div>
@@ -50,42 +47,41 @@
 @section Scripts {
 <script>
     $(function () {
-            $('.qtyplus').click(function (e) {
-                e.preventDefault();
-                var $this = $(this);
-                var fieldName = $this.attr('field');
-                var dataId = $this.siblings('input[name=' + fieldName + ']').data('id');
+        $('.qtyplus').click(function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            var fieldName = $this.attr('field');
+            var dataId = $this.siblings('input[name=' + fieldName + ']').data('id');
 
-                var $input = $('input[name=' + fieldName + '][data-id="' + dataId + '"]');
-                var currentVal = parseInt($input.val());
+            var $input = $('input[name=' + fieldName + '][data-id="' + dataId + '"]');
+            var currentVal = parseInt($input.val());
 
-                if (!isNaN(currentVal)) {
-                    $input.val(currentVal + 1);
-                } else {
-                    $input.val(0);
-                }
-            });
+            if (!isNaN(currentVal)) {
+                $input.val(currentVal + 1);
+            } else {
+                $input.val(0);
+            }
+        });
 
-            $('.qtyminus').click(function (e) {
-                e.preventDefault();
-                var $this = $(this);
-                var fieldName = $this.attr('field');
-                var dataId = $this.siblings('input[name=' + fieldName + ']').data('id');
+        $('.qtyminus').click(function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            var fieldName = $this.attr('field');
+            var dataId = $this.siblings('input[name=' + fieldName + ']').data('id');
 
-                var $input = $('input[name=' + fieldName + '][data-id="' + dataId + '"]');
-                var currentVal = parseInt($input.val());
+            var $input = $('input[name=' + fieldName + '][data-id="' + dataId + '"]');
+            var currentVal = parseInt($input.val());
 
-                if (!isNaN(currentVal) && currentVal > 0) {
-                    $input.val(currentVal - 1);
-                } else {
-                    $input.val(0);
-                }
-            });
+            if (!isNaN(currentVal) && currentVal > 0) {
+                $input.val(currentVal - 1);
+            } else {
+                $input.val(0);
+            }
+        });
     });
 
     $('.delete-btn').on('click', function () {
         const id = $(this).attr('data-id');
-        console.log(id)
 
         fetch(`/Shipment/Delete?id=${id}`, {
             method: 'POST',
@@ -103,6 +99,11 @@
                 console.error('錯誤:', error);
             });
     })
+
+    // $('.order-box').on('click', function () {
+    //     const id = $(this).attr('data-id');
+    //     console.log(id)
+    // })
 
 </script>
 }

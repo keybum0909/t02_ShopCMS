@@ -11,10 +11,12 @@ namespace t02_ShopCMS.Services
     {
         Task<Indexresp> QueryInit(string searchString);
         Task<List<Product>> CategoryFilter(int id);
+        Task<DetailViewModel> Details(int? id);
         Task<bool> Create(Product product, IFormFile myImg);
 
 
         Task<Editresp> Edit(int? id);
+        Task<Product> Delete(int? id);
         Task<bool> DeleteConfirmed(int? id);
     }
 }
