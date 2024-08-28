@@ -24,7 +24,7 @@ namespace t02_ShopCMS.Entity
 
         public virtual Category Category { get; set; }
 
-        public virtual List<ShipmentList> ShipmentLists { get; set; }
+        public virtual List<OrderList> OrderLists { get; set; }
     }
 
 }

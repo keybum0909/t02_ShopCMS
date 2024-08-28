@@ -19,13 +19,12 @@ namespace t02_ShopCMS.Services
             _context = context;
         }
 
-        public List<ShipmentList> QueryInit()
+        public List<OrderList> QueryInit()
         {
-            var queryInitData = _context.ShipmentList.OrderByDescending(x => x.CreateTime).Select(x => new ShipmentList
+            var queryInitData = _context.OrderList.OrderByDescending(x => x.CreateTime).Select(x => new OrderList
             {
                 Id = x.Id,
                 ProductId = x.ProductId,
-                OrderNumber = x.OrderNumber,
                 ProductName = x.ProductName,
                 Amount = x.Amount,
                 Category = x.Category
@@ -34,37 +33,76 @@ namespace t02_ShopCMS.Services
             return queryInitData;
         }
 
-        public async Task<List<ShipmentList>> SaveOrder([FromBody] SaveDatareq req)
+        public async Task<List<OrderList>> SaveOrder([FromBody] SaveDatareq req)
         {
-            bool ReadyInDatabase = _context.ShipmentList.Any(x => x.ProductName == req.ProductName);
+            bool ReadyInDatabase = _context.OrderList.Any(x => x.ProductName == req.ProductName);
+            var orderProoductId = _context.Product.Where(x => x.Name == req.ProductName).Select(x => x.Id).FirstOrDefault();
             if (!ReadyInDatabase)
             {
-                var orderProoductId = _context.Product.Where(x => x.Name == req.ProductName).Select(x => x.Id).FirstOrDefault();
-                var shipment = new ShipmentList
+                var shipment = new OrderList
                 {
                     ProductId = orderProoductId,
-                    OrderNumber = GenerateOrderNumber(req.Category),
                     ProductName = req.ProductName,
                     Amount = req.Amount,
                     Category = req.Category,
                     CreateTime = DateTime.Now
                 };
 
-                _context.ShipmentList.Add(shipment);
-                await _context.SaveChangesAsync();
-
+                _context.OrderList.Add(shipment);
+            }
+            else
+            {
+                var newData = _context.OrderList.Where(x => x.ProductName == req.ProductName).ToList();
+                foreach (var item in newData)
+                {
+                    item.Amount = req.Amount;
+                }
             }
 
-            return await _context.ShipmentList.ToListAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return await _context.OrderList.ToListAsync();
 
+        }
+
+        public async Task<bool> Order([FromBody] List<Orderreq> req)
+        {
+            foreach (var item in req)
+            {
+                var catogory = _context.Product.Where(x => x.Name == item.ProductName).Select(x => x.CategoryId).FirstOrDefault().ToString();
+                var shipment = new ShipmentList
+                {
+                    ProductName = item.ProductName,
+                    ShipNumber = GenerateOrderNumber(catogory),
+                    Amount = item.Amount,
+                    OrderTime = DateTime.Now
+                };
+
+                _context.ShipmentList.Add(shipment);
+                var orderItem = _context.OrderList.FirstOrDefault(x => x.ProductName == item.ProductName);
+                if (orderItem != null)
+                {
+                    _context.OrderList.Remove(orderItem);
+                }
+
+                await _context.SaveChangesAsync();
+            }
+
+            return true;
         }
 
         public async Task<bool> Delete(int? id)
         {
-            var shipmentResult = await _context.ShipmentList.FindAsync(id);
+            var shipmentResult = await _context.OrderList.FindAsync(id);
             if(shipmentResult != null)
             {
-                _context.ShipmentList.Remove(shipmentResult);
+                _context.OrderList.Remove(shipmentResult);
                 await _context.SaveChangesAsync();
             }
 
@@ -75,12 +113,10 @@ namespace t02_ShopCMS.Services
         {
             string timestamp = DateTime.Now.ToString("yyyyMMddHHmm");
 
-            string categoryCode = _context.Category.Where(x => x.Name == Category).Select(x => x.Id).FirstOrDefault().ToString();
-
             Random random = new Random();
             string randomDigits = random.Next(0, 100).ToString("D2");
 
-            return $"{timestamp}{categoryCode}{randomDigits}";
+            return $"{timestamp}{Category}{randomDigits}";
         }
     }
 }

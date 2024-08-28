@@ -17,6 +17,7 @@ namespace t02_ShopCMS.Data
         //Table代理人
         public DbSet<Product> Product { get; set; }
         public DbSet<Category> Category { get; set; }
+        public DbSet<OrderList> OrderList { get; set; }
         public DbSet<ShipmentList> ShipmentList { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -86,6 +87,39 @@ namespace t02_ShopCMS.Data
                     .HasComment("類別名稱");
             });
 
+            modelBuilder.Entity<OrderList>(entity =>
+            {
+                entity.ToTable("OrderList");
+
+                entity.Property(e => e.Id)
+                    .IsRequired()
+                    .HasComment("下單編號");
+
+                entity.Property(e => e.ProductName)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasComment("下單商品名稱");
+
+                entity.Property(e => e.Amount)
+                    .IsRequired()
+                    .HasComment("下單商品數量");
+
+                entity.Property(e => e.Category)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasComment("下單商品類別");
+
+                entity.Property(e => e.CreateTime)
+                    .IsRequired()
+                    .HasConversion<DateTime>()
+                    .HasComment("下單時間");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.OrderLists)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("FK_Product_ShipmentList");
+            });
+
             modelBuilder.Entity<ShipmentList>(entity =>
             {
                 entity.ToTable("ShipmentList");
@@ -94,34 +128,24 @@ namespace t02_ShopCMS.Data
                     .IsRequired()
                     .HasComment("出貨編號");
 
-                entity.Property(e => e.OrderNumber)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasComment("出貨單號");
-
                 entity.Property(e => e.ProductName)
                     .IsRequired()
                     .HasMaxLength(50)
                     .HasComment("出貨商品名稱");
 
+                entity.Property(e => e.ShipNumber)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasComment("出貨商品編號");
+
                 entity.Property(e => e.Amount)
                     .IsRequired()
                     .HasComment("出貨商品數量");
 
-                entity.Property(e => e.Category)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasComment("出貨商品類別");
-
-                entity.Property(e => e.CreateTime)
+                entity.Property(e => e.OrderTime)
                     .IsRequired()
                     .HasConversion<DateTime>()
-                    .HasComment("產品新增時間");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.ShipmentLists)
-                    .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK_Product_ShipmentList");
+                    .HasComment("出貨時間");
             });
 
             OnModelCreatingPartial(modelBuilder);

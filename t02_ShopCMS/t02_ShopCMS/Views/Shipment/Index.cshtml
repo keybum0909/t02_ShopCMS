@@ -1,4 +1,4 @@
-﻿@model IEnumerable<t02_ShopCMS.Entity.ShipmentList>
+﻿@model IEnumerable<t02_ShopCMS.Entity.OrderList>
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -13,11 +13,11 @@
     <div class="row shipment-list">
         @foreach (var item in Model)
         {
-            <div class="form-check col-1" data-id="@item.Id">
-                <input class="form-check-input order-box" type="checkbox" value="" id="flexCheckDefault">
+            <div class="form-check col-1">
+                <input class="form-check-input order-checkbox" type="checkbox" value="" id="flexCheckDefault" data-id="@item.Id" data-product-name="@item.ProductName" data-amount="@item.Amount">
                 <label class="form-check-label" for="flexCheckDefault"></label>
             </div>
-            <div class="row shipment-item col-11">
+            <div class="row shipment-item col-11" data-product-name="@item.ProductName" data-category="@item.Category">
                 <img class="col-2" />
                 <div class="col-5">
                     <div class="category-item d-inline" data-category="@item.Category">
@@ -28,9 +28,9 @@
                     </div>
                 </div>
                 <div class="row col-3">
-                    <form id='myform' method='POST' action='#'>
+                    <form>
                         <input type='button' value='-' class='qtyminus' field='quantity' />
-                        <input type='text' name='quantity' value='@item.Amount' class='qty' name="@item.Amount" data-amount="@item.Amount" data-id="@item.Id" />
+                        <input type='text' value='@item.Amount' class='qty' name='quantity' data-amount="@item.Amount" data-id="@item.Id" />
                         <input type='button' value='+' class='qtyplus' field='quantity' />
                     </form>
                 </div>
@@ -41,43 +41,58 @@
          }
     </div>
     <div>
-        <input type="submit" value="出貨" class="add-product btn" />
+        <input type="submit" value="出貨" class="order-btn btn" />
     </div>
 </div>
 @section Scripts {
 <script>
+    const saveArray = [];
+
     $(function () {
-        $('.qtyplus').click(function (e) {
+        $('.qtyplus, .qtyminus').click(function (e) {
             e.preventDefault();
             var $this = $(this);
             var fieldName = $this.attr('field');
-            var dataId = $this.siblings('input[name=' + fieldName + ']').data('id');
-
-            var $input = $('input[name=' + fieldName + '][data-id="' + dataId + '"]');
+            var $input = $this.siblings('input[name=' + fieldName + ']');
             var currentVal = parseInt($input.val());
 
-            if (!isNaN(currentVal)) {
-                $input.val(currentVal + 1);
-            } else {
-                $input.val(0);
+            if ($this.hasClass('qtyplus')) {
+                $input.val(!isNaN(currentVal) ? currentVal + 1 : 0);
+            } else if ($this.hasClass('qtyminus')) {
+                $input.val(!isNaN(currentVal) && currentVal > 0 ? currentVal - 1 : 0);
             }
+
+            const productDiv = this.closest('.shipment-item');
+            const productName = productDiv.getAttribute('data-product-name');
+            const productCategory = productDiv.getAttribute('data-category');
+
+            const amount = parseInt($this.siblings('input[name=' + fieldName + ']').val());
+
+            AmountSave(productName, productCategory, amount)
         });
 
-        $('.qtyminus').click(function (e) {
-            e.preventDefault();
-            var $this = $(this);
-            var fieldName = $this.attr('field');
-            var dataId = $this.siblings('input[name=' + fieldName + ']').data('id');
-
-            var $input = $('input[name=' + fieldName + '][data-id="' + dataId + '"]');
-            var currentVal = parseInt($input.val());
-
-            if (!isNaN(currentVal) && currentVal > 0) {
-                $input.val(currentVal - 1);
-            } else {
-                $input.val(0);
-            }
-        });
+        function AmountSave(productName, productCategory, amount) {
+            
+            fetch('/Shipment/SaveOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "ProductName": productName, "Amount": amount, "Category": productCategory })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                } else {
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
     });
 
     $('.delete-btn').on('click', function () {
@@ -100,10 +115,33 @@
             });
     })
 
-    // $('.order-box').on('click', function () {
-    //     const id = $(this).attr('data-id');
-    //     console.log(id)
-    // })
+    $('.order-checkbox').on('click', function () {
+        const productName = $(this).attr('data-product-name');
+        const amount = $(this).attr('data-amount');
+
+        saveArray.push({ "ProductName": productName, "Amount": amount })
+        console.log(saveArray)
+    })
+
+    $('.order-btn').on('click', function () {
+        
+        fetch('/Shipment/Order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(saveArray)
+        })
+            .then(response => response.json())
+            .then(result => {
+                console.log('成功:', result);
+                location.reload();
+                saveArray = [];
+            })
+            .catch(error => {
+                console.error('錯誤:', error);
+            });
+    })
 
 </script>
 }
