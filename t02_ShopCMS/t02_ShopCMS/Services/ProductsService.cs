@@ -162,8 +162,8 @@ namespace t02_ShopCMS.Services
             var product = await _context.Product.FindAsync(id);
             if (product != null)
             {
-                var shipmentLists = _context.ShipmentList.Where(s => s.ProductId == id);
-                _context.ShipmentList.RemoveRange(shipmentLists);
+                var shipmentLists = _context.OrderList.Where(s => s.ProductId == id);
+                _context.OrderList.RemoveRange(shipmentLists);
 
                 _context.Product.Remove(product);
                 await _context.SaveChangesAsync();
@@ -171,10 +171,10 @@ namespace t02_ShopCMS.Services
             }
 
 
-            var shipOrder = await _context.ShipmentList.FirstOrDefaultAsync(m => m.ProductId == id);
+            var shipOrder = await _context.OrderList.FirstOrDefaultAsync(m => m.ProductId == id);
             if (shipOrder != null)
             {
-                _context.ShipmentList.Remove(shipOrder);
+                _context.OrderList.Remove(shipOrder);
                 await _context.SaveChangesAsync();
             }
 
