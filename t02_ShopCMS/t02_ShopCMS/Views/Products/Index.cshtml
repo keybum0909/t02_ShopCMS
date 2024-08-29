@@ -3,24 +3,26 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
 <div class="col-md-12 row">
-    <form asp-action="Index" method="get" class="col-4">
-        <div class="input-group input-group-sm ">
-            <input class="form-control" type="text" placeholder="Name" name="searchString" />
-            <input class="btn btn-sm btn-primary" type="submit" value="Search" />
-        </div>
-    </form>
-    <div>
-        <a asp-controller="Shipment" asp-action="Index">
-            <input type="submit" value="待出貨清單" class="btn" />
-        </a>
+    
+</div>
+<div class="header">
+    <div class="logo">
+        <img src="../../images/changing_logo.png" />
+        <span>全景產品管理後台</span>
+    </div>
+    <a asp-controller="Shipment" asp-action="Index" class="order-btn">
+        <input type="submit" value="待出貨清單" class="btn" />
+    </a>
+    <div class="slogan-box">
+        <p class="tagline">尋找最佳方案</p>
+        <p>因應不同產業需求，提供最適合的資安解決方案</p>
     </div>
 </div>
 
 <div class="row">
-    <div class="row col-md-12 d-inline">
-        <div class="form-group">
+    <div class="row col-md-12">
+        <div class="form-group  d-inline">
             <a asp-action="Create">
                 <input type="submit" value="+ 新增產品" class="add-product btn" />
             </a>
@@ -28,6 +30,12 @@
                 <input type="submit" value="+ 新增類別" class="add-product btn" />
             </a>
         </div>
+        <form asp-action="Index" method="get" class="col-4">
+            <div class="input-group input-group-sm ">
+                <input class="form-control" type="text" placeholder="Name" name="searchString" />
+                <input class="btn btn-sm btn-primary" type="submit" value="Search" />
+            </div>
+        </form>
     </div>
     <div class="col-md-3 categories-container">
         @foreach (var item in Model.Categories)
