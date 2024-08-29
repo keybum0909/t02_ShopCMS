@@ -7,16 +7,16 @@ namespace t02_ShopCMS.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Product_Category_CategoryId",
-                table: "Category");
+                name: "FK_Product_Category",
+                table: "Product");
 
             migrationBuilder.DropColumn(
                 name: "CategorydId",
-                table: "Category");
+                table: "Product");
 
             migrationBuilder.AlterColumn<int>(
                 name: "CategoryId",
-                table: "Category",
+                table: "Product",
                 type: "int",
                 nullable: false,
                 defaultValue: 0,
@@ -25,7 +25,7 @@ namespace t02_ShopCMS.Migrations
                 oldNullable: true);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Product_Category_CategoryId",
+                name: "FK_Product_Category",
                 table: "Product",
                 column: "CategoryId",
                 principalTable: "Category",
@@ -36,12 +36,12 @@ namespace t02_ShopCMS.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Product_Category_CategoryId",
-                table: "Category");
+                name: "FK_Product_Category",
+                table: "Product");
 
             migrationBuilder.AlterColumn<int>(
                 name: "CategoryId",
-                table: "Category",
+                table: "Product",
                 type: "int",
                 nullable: true,
                 oldClrType: typeof(int),
@@ -49,10 +49,18 @@ namespace t02_ShopCMS.Migrations
 
             migrationBuilder.AddColumn<int>(
                 name: "CategorydId",
-                table: "Category",
+                table: "Product",
                 type: "int",
                 nullable: false,
                 defaultValue: 0);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Product_Category",
+                table: "Product",
+                column: "CategoryId",
+                principalTable: "Category",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
     }
 }
