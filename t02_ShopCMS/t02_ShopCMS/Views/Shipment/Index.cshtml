@@ -120,27 +120,37 @@
         const amount = $(this).attr('data-amount');
 
         saveArray.push({ "ProductName": productName, "Amount": amount })
-        console.log(saveArray)
     })
 
     $('.order-btn').on('click', function () {
-        
-        fetch('/Shipment/Order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(saveArray)
-        })
-            .then(response => response.json())
-            .then(result => {
-                console.log('成功:', result);
-                location.reload();
-                saveArray = [];
+        console.log(saveArray)
+        if (saveArray.length === 0) {
+            swal.fire({
+                title: "You didn't select any product",
+                icon: "error"
             })
-            .catch(error => {
-                console.error('錯誤:', error);
-            });
+        } else {
+            fetch('/Shipment/Order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(saveArray)
+            })
+                .then(response => response.json())
+                .then(result => {
+                    console.log('成功:', result);
+                    swal.fire({
+                        title: "Your product have been sent",
+                        icon: "success"
+                    })
+                    location.reload();
+                    saveArray = [];
+                })
+                .catch(error => {
+                    console.error('錯誤:', error);
+                });
+        }
     })
 
 </script>

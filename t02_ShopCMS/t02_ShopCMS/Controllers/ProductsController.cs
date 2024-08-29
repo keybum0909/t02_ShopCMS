@@ -79,7 +79,7 @@ namespace t02_ShopCMS.Controllers
             if (result.Product == null)
             { 
                 ViewBag.ErrorMessage = "此商品於兩周內上架，不可編輯";
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new { Id = id, error = "true" });
             }
             return View(result);
         }

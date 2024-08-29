@@ -148,7 +148,15 @@
             });
         });
 
-
+        $(document).ready(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('error') && urlParams.get('error') === 'true') {
+                swal.fire({
+                    title: "Cannot be edited within two weeks of shelfing",
+                    icon: "error"
+                });
+            }
+        });
     
     </script>
 }
