@@ -21,9 +21,14 @@
 
 .categories-btn { background-color: #142E7C; color: #eee; margin-bottom: 5px; }
 
-.product-list { box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); }
+.category-btn {  background-color: #142E7C; color: #eee; }
+
+.product-card { box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25); padding: 15px; text-align: center; }
 
 .category-name {  background-color: #142E7C; color: #eee; }
+
+.product-card img { width: 100%; height: 150px; margin-bottom: 15px; }
+
 img {height: 100px; width: 200px; margin-top: 10px; display: flex; justify-content: center; }
 .category-description { font-size: 12px; margin-bottom: 10px; }
 
