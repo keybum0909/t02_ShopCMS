@@ -3,68 +3,81 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
 <div class="col-md-12 row">
-    <form asp-action="Index" method="get" class="col-4">
-        <div class="input-group input-group-sm ">
-            <input class="form-control" type="text" placeholder="Name" name="searchString" />
-            <input class="btn btn-sm btn-primary" type="submit" value="Search" />
-        </div>
-    </form>
-    <div>
-        <a asp-controller="Shipment" asp-action="Index">
-            <input type="submit" value="待出貨清單" class="btn" />
-        </a>
+    
+</div>
+<div class="header">
+    <div class="logo">
+        <img src="../../images/changing_logo.png" />
+        <span>全景產品管理後台</span>
+    </div>
+    <a asp-controller="Shipment" asp-action="Index" class="order-btn">
+        <input type="submit" value="待出貨清單" class="btn" />
+    </a>
+    <div class="slogan-box">
+        <p class="tagline d-inline">尋找最佳方案</p>
+        <p>因應不同產業需求，提供最適合的資安解決方案</p>
     </div>
 </div>
 
 <div class="row">
-    <div class="row col-md-12 d-inline">
-        <div class="form-group">
-            <a asp-action="Create">
-                <input type="submit" value="+ 新增產品" class="add-product btn" />
-            </a>
-            <a asp-action="CreateCategory">
-                <input type="submit" value="+ 新增類別" class="add-product btn" />
-            </a>
+    <div class="row col-md-12">
+        <div class="d-flex flex-column align-items-end">
+            <div class="d-flex">
+                <a asp-action="Create" class="me-2 mb-2">
+                    <input type="submit" value="+ 新增產品" class="add-product btn btn-primary" />
+                </a>
+                <a asp-action="CreateCategory">
+                    <input type="submit" value="+ 新增類別" class="add-product btn btn-secondary" />
+                </a>
+            </div>
+            <form asp-action="Index" method="get" class="col-4 mb-2">
+                <div class="input-group input-group-sm">
+                    <input class="form-control" type="text" placeholder="Name" name="searchString" />
+                    <input class="btn btn-sm btn-primary" type="submit" value="Search" />
+                </div>
+            </form>
         </div>
     </div>
-    <div class="col-md-3 categories-container">
-        @foreach (var item in Model.Categories)
-        {
-            <div class="form-group">
-                <input class="categories-btn btn" type="submit" value="@item.Name" data-id="@item.Id" data-name="@item.Name" />
-            </div>
-        }
-    </div>
-    <div class="row col-md-9">
-        <div class="row product-area">
-            @foreach (var item in Model.Products)
-            {
-                <div class="col-md-4 product-list"
-                     data-image="@item.Image"
-                     data-category-name="@item.Category.Name"
-                     data-name="@item.Name"
-                     data-description="@item.Description">
-                    <img id="@item.Id" />
-                    <div class="col-md-12 category-name d-inline">
-                        @item.Category.Name
-                    </div>
-                    <div>
-                        @item.Name
-                    </div>
-                    <div class="category-description">
-                        @item.Description
-                    </div>
-                    @if (item.CanOrder)
+    <div class="container p-5">
+        <div class="row">
+            <div class="col-md-3 d-inline">
+                <div class="nav-buttons">
+                    @foreach (var item in Model.Categories)
                     {
-                        <button class="add-shipment">+</button>
+                        <button class="btn category-btn mb-3" data-id="@item.Id" data-name="@item.Name">@item.Name</button>
                     }
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
                 </div>
-            }
+            </div>
+            <div class="col-md-9">
+                <div class="row">
+                @foreach (var item in Model.Products)
+                {
+                    <div class="col-md-4 product-card mb-2"
+                            data-image="@item.Image"
+                            data-category-name="@item.Category.Name"
+                            data-name="@item.Name"
+                            data-description="@item.Description">
+                        <img class="mb-1" id="@item.Id" />
+                        <div class="col-md-12 category-name">
+                            <span class="d-inline">@item.Category.Name</span>
+                        </div>
+                        <div>
+                            <span>@item.Name</span>
+                        </div>
+                        <div class="category-description">
+                            <span>@item.Description</span>
+                        </div>
+                        @if (item.CanOrder)
+                        {
+                            <button class="add-shipment">+</button>
+                        }
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>

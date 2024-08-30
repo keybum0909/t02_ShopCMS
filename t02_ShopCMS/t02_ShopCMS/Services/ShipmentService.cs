@@ -75,16 +75,19 @@ namespace t02_ShopCMS.Services
         {
             foreach (var item in req)
             {
-                var catogory = _context.Product.Where(x => x.Name == item.ProductName).Select(x => x.CategoryId).FirstOrDefault().ToString();
+                var product = _context.Product.FirstOrDefault(x => x.Name == item.ProductName);
+
                 var shipment = new ShipmentList
                 {
                     ProductName = item.ProductName,
-                    ShipNumber = GenerateOrderNumber(catogory),
+                    ShipNumber = GenerateOrderNumber(product.CategoryId.ToString()),
                     Amount = item.Amount,
                     OrderTime = DateTime.Now
                 };
 
                 _context.ShipmentList.Add(shipment);
+                product.Stock -= item.Amount;
+
                 var orderItem = _context.OrderList.FirstOrDefault(x => x.ProductName == item.ProductName);
                 if (orderItem != null)
                 {
