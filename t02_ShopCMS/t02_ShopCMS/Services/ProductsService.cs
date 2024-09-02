@@ -22,7 +22,22 @@ namespace t02_ShopCMS.Services
             _context = context;
         }
 
-        public async Task<Indexresp> QueryInit(string searchString)
+        public async Task<Indexresp> QueryInit()
+        {
+            var products = await _context.Product.ToListAsync();
+            
+            var categories = await _context.Category.ToListAsync();
+
+            Indexresp result = new()
+            {
+                Products = products,
+                Categories = categories
+            };
+
+            return result;
+        }
+
+        public List<Product> SearchProduct(string searchString)
         {
             IQueryable<Product> categoryProducts = _context.Product.Include(p => p.Category);
 
@@ -33,18 +48,7 @@ namespace t02_ShopCMS.Services
 
             List<Product> searchResult = categoryProducts.ToList();
 
-            var products = await _context.Product.ToListAsync();
-            
-            var categories = await _context.Category.ToListAsync();
-
-            Indexresp result = new()
-            {
-                Result = searchResult,
-                Products = products,
-                Categories = categories
-            };
-
-            return result;
+            return searchResult;
         }
 
         public async Task<List<Product>> CategoryFilter(int id)

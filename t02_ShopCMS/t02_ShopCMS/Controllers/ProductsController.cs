@@ -27,10 +27,17 @@ namespace t02_ShopCMS.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index()
         {
-            var result = await _productsService.QueryInit(searchString);
+            var result = await _productsService.QueryInit();
             return View(result);
+        }
+
+        [HttpPost]
+        public List<Product> SearchProduct(string searchString)
+        {
+            var result = _productsService.SearchProduct(searchString);
+            return result;
         }
 
         [HttpPost]
@@ -51,7 +58,7 @@ namespace t02_ShopCMS.Controllers
         public IActionResult Create()
         {
             //傳Categories model給create view
-            ViewData["Categories"] = new SelectList(_context.Set<Category>(), "Id", "Name");
+            ViewData["Categories"] = new SelectList(_context.Set<Category>().Where(c => c.Id != 1), "Id", "Name");
             return View();
         }
 
@@ -88,7 +95,6 @@ namespace t02_ShopCMS.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditSave(int id, DetailViewModel dvm, IFormFile myImg)
         {
             if (id != dvm.Product.Id)
@@ -131,7 +137,7 @@ namespace t02_ShopCMS.Controllers
                 //重新路由
                 return RedirectToAction(nameof(Index));
             }
-            return View(dvm.Product);
+            return RedirectToAction(nameof(Edit));
         }
 
         // GET: Products/Delete/5
