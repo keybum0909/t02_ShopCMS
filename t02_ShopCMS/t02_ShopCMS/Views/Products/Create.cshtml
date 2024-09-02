@@ -4,68 +4,84 @@
     ViewData["Title"] = "Create";
 }
 <link href="~/css/editor.css" rel="stylesheet">
-<h1>Create</h1>
 
-<h4>Product</h4>
-<hr />
 <div class="row">
-    <span>文件影像管理及調閱系統</span>
-    <div class="col-md-12 row">
+    <div class="col-md-12 row form-container">
+        <h4>新增產品</h4>
         <form asp-action="Create" enctype="multipart/form-data" class="form-row">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @*類別*@
-            <div class="form-group col-12">
-                <label asp-for="CategoryId" class="control-label"></label>  
-                <select class="form-control" asp-for="CategoryId" asp-items="ViewBag.Categories"></select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            <div class="form-group row mb-3">
+                <label asp-for="CategoryId" class="col-md-1 control-label required">產品類型</label>
+                <div class="col-md-11">
+                    <select class="form-control" asp-for="CategoryId" asp-items="ViewBag.Categories"></select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
             </div>
             @*名稱*@
-            <div class="form-group col-12">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+            <div class="form-group row mb-3">
+                <label asp-for="Name" class="col-md-1 control-label required">產品名稱</label>
+                <div class="col-md-11">
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
             </div>
             @*簡介*@
-            <div class="form-group col-12" >
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" rows="6"></textarea>
+            <div class="form-group row mb-3">
+                <label asp-for="Description" class="col-md-1 col-form-label">產品簡介</label>
+                <div class="col-md-11">
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                </div>
             </div>
             @*圖片*@
-            <div class="col-6">
-                <img id="preview" class="img-fluid mx-auto d-block" style="height:200px;"/>
+            <div class="form-group row mb-3">
+                @*
+                <img id="preview" class="img-fluid mx-auto d-block" style="height:200px;"/> *@
+                <label asp-for="Image" for="inputImg" class="col-md-1 control-label required">產品圖片</label>
+                <div class="col-md-11 custom-file">
+                    <label class="custom-file-label w-100" id="customFileLabel" for="inputImg">選擇圖片</label>
+                    <input type="file" class="custom-file-input" id="inputImg" name="myImg">
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group col-12">
-                <label asp-for="Image" class="control-label"></label>
-                <input type="file" class="form-control-file" name="myImg" id="inputImg">
-                <span asp-validation-for="Image" class="text-danger"></span>
-            </div>
+            
             @*價格*@
-            <div class="form-group col-12">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
+            <div class="form-group row mb-3">
+                <label asp-for="Price" class="col-md-1 col-form-label required">產品價格</label>
+                <div class="col-md-11">
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
             </div>
             @*庫存*@
-            <div class="form-group col-12">
-                <label asp-for="Stock" class="control-label"></label>  
-                <input asp-for="Stock" class="form-control" />
-                <span asp-validation-for="Stock" class="text-danger"></span>
+            <div class="form-group row mb-3">
+                <label asp-for="Stock" class="col-md-1 control-label required">產品庫存</label>
+                <div class="col-md-11">
+                    <input asp-for="Stock" class="form-control" />
+                    <span asp-validation-for="Stock" class="text-danger"></span>
+                </div>
             </div>
             @* 是否上架 *@
-            <div class="form-check form-switch col-12">
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" name="CanOrder" value="true" @(Model?.CanOrder == true ? "checked" : "")>
-                <label class="form-check-label" for="flexSwitchCheckChecked">是否上架</label>
-                <span asp-validation-for="CanOrder" class="text-danger"></span>
+            <div class="form-check form-switch row mb-3 d-flex align-items-center">
+                <div class="col-md-1">
+                    <label class="form-check-label required" for="flexSwitchCheckChecked">是否上架</label>
+                </div>
+                <div class="col-md-11">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" name="CanOrder" value="true" @(Model?.CanOrder == true ? "checked" : "")>
+                    <span asp-validation-for="CanOrder" class="text-danger"></span>
+                </div>
             </div>
             @*內容*@
-            <div class="form-group col-12">
-                <label asp-for="Content" class="control-label"></label>
-                <textarea asp-for="Content" class="form-control" id="editor"></textarea>
+            <div class="form-group row mb-3">
+                <label asp-for="Content" class="col-md-1 col-form-label">產品內容</label>
+                <div class="col-md-11">
+                    <textarea asp-for="Content" class="form-control"></textarea>
+                </div>
             </div>
             
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="確定" class="btn submit-btn" />
             </div>
         </form>
     </div>
@@ -80,24 +96,10 @@
     <script>
     $('#inputImg').on('change',function(e){
         const file = this.files[0];
-        //用crateObjectURL產生圖片URL
-        const objectURL=URL.createObjectURL(file);
-        $('#preview').attr('src',objectURL);
+        const label = document.getElementById('customFileLabel');
+        const fileName = inputImg.files[0] ? inputImg.files[0].name : '選擇圖片';
+        label.textContent = fileName;
     })
-    </script>
-    
-    <script src="~/lib/ckeditor5/build/ckeditor.js"></script>
-
-    <script>
-        ClassicEditor
-            .create( document.querySelector( '#editor' ) )
-            .then( editor => {
-                console.log( editor );
-            } )
-            .catch( error => {
-                console.error( error );
-            } );
-
     </script>
 
 }
