@@ -3,9 +3,6 @@
     ViewData["Title"] = "Index";
 }
 
-<div class="col-md-12 row">
-    
-</div>
 <div class="header">
     <div class="logo">
         <img src="../../images/changing_logo.png" />
@@ -39,137 +36,148 @@
             </form>
         </div>
     </div>
-    <div class="container p-5">
+    <div class="container p-4">
         <div class="row">
-            <div class="col-md-3 d-inline">
-                <div class="nav-buttons">
-                    @foreach (var item in Model.Categories)
-                    {
-                        <button class="btn category-btn mb-3" data-id="@item.Id" data-name="@item.Name">@item.Name</button>
-                    }
-                </div>
+            <div class="col-md-2 p-2 me-4">
+                @foreach (var item in Model.Categories)
+                {
+                    <button class="btn category-btn mb-3 w-100" data-id="@item.Id" data-name="@item.Name">@item.Name</button>
+                }
             </div>
-            <div class="col-md-9">
-                <div class="row">
+            <div class="col-md-10 row product-area pe-4">
                 @foreach (var item in Model.Products)
                 {
-                    <div class="col-md-4 product-card mb-2"
-                            data-image="@item.Image"
-                            data-category-name="@item.Category.Name"
-                            data-name="@item.Name"
-                            data-description="@item.Description">
-                        <img class="mb-1" id="@item.Id" />
-                        <div class="col-md-12 category-name">
-                            <span class="d-inline">@item.Category.Name</span>
+                    @if (item.CanOrder)
+                    {
+                        <div class="col-md-4 product-card"
+                                data-image="@item.Image"
+                                data-category-name="@item.Category.Name"
+                                data-name="@item.Name"
+                                data-description="@item.Description">
+                            <img class="mb-4" id="@item.Id" />
+                            <div class="col-md-12 category-name d-inline">@item.Category.Name</div>
+                            <h5>@item.Name</h5>
+                            <div>@item.Description</div>
+                            <div class="product-item">
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                            </div>
+                            <button class="btn btn-primary plus-button">+</button>
                         </div>
-                        <div>
-                            <span>@item.Name</span>
+                    }
+                    else
+                    {
+                        <div class="col-md-4 product-card"
+                             data-image="@item.Image"
+                             data-category-name="@item.Category.Name"
+                             data-name="@item.Name"
+                             data-description="@item.Description">
+                            <span class="product-label sold-out">已下架</span>
+                            <img class="mb-4" id="@item.Id" />
+                            <div class="col-md-12 category-name d-inline mt-4">@item.Category.Name</div>
+                            <h5>@item.Name</h5>
+                            <div>@item.Description</div>
+                            <div class="product-item">
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                            </div>
                         </div>
-                        <div class="category-description">
-                            <span>@item.Description</span>
-                        </div>
-                        @if (item.CanOrder)
-                        {
-                            <button class="add-shipment">+</button>
-                        }
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    </div>
+                    }
                 }
             </div>
         </div>
     </div>
 </div>
 @section Scripts {
-    <script>
+<script>
 
-        $('.categories-btn').on('click', function () {
+    $('.category-btn').on('click', function () {
             
-            const id = $(this).attr('data-id');
+        const id = $(this).attr('data-id');
 
-            fetch(`/Products/CategoryFilter?id=${id}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            })
-            .then(response => response.json())
-            .then(result => {
-                console.log('成功:', result);
-                $('.product-area').empty();
+        fetch(`/Products/CategoryFilter?id=${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => response.json())
+        .then(result => {
+            console.log('成功:', result);
+            $('.product-area').empty();
 
-                result.forEach(product => {
-                    $('.product-area').append(`
-                        <div class="col-md-4 product-list">
-                            <img id="${product.id}" />
-                            <div class="col-md-12 category-name d-inline">
-                                ${name}
-                            </div>
-                            <div>
-                                ${product.name}
-                            </div>
-                            <div class="category-description">
-                                ${product.description}
-                            </div>
-                            <button class="add-shipment">+</button>
-                            <a asp-action="Edit" asp-route-id="${product.id}">Edit</a>
+            result.forEach(product => {
+                $('.product-area').append(`
+                    <div class="col-md-4 product-card">
+                        <img id="${product.id}" />
+                        <div class="col-md-12 category-name d-inline">
                         </div>
-                    `);
-                });
-
-            })
-            .catch(error => {
-                console.error('錯誤:', error);
+                        <div>
+                            ${product.name}
+                        </div>
+                        <div class="category-description">
+                            ${product.description}
+                        </div>
+                        <button class="add-shipment">+</button>
+                        <a asp-action="Edit" asp-route-id="${product.id}">Edit</a>
+                    </div>
+                `);
             });
+
+        })
+        .catch(error => {
+            console.error('錯誤:', error);
         });
+    });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.add-shipment').forEach(button => {
-                button.addEventListener('click', function (event) {
-                    event.preventDefault();
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.add-shipment').forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
 
-                    const productDiv = this.closest('.product-list');
+                const productDiv = this.closest('.product-list');
 
-                    const productName = productDiv.getAttribute('data-name');
-                    const productCategory = productDiv.getAttribute('data-category-name');
+                const productName = productDiv.getAttribute('data-name');
+                const productCategory = productDiv.getAttribute('data-category-name');
 
-                    const amount = 1;
+                const amount = 1;
 
-                    fetch('/Shipment/SaveOrder', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ "ProductName": productName, "Amount": amount, "Category": productCategory })
+                fetch('/Shipment/SaveOrder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "ProductName": productName, "Amount": amount, "Category": productCategory })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                        return response.json();
                     })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok ' + response.statusText);
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.success) {
-                                window.location.href = "/Shipment/Index";
-                            } else {
-                                alert('加入購物車發生錯誤');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-                });
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = "/Shipment/Index";
+                        } else {
+                            alert('加入購物車發生錯誤');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
             });
         });
+    });
 
-        $(document).ready(function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('error') && urlParams.get('error') === 'true') {
-                swal.fire({
-                    title: "Cannot be edited within two weeks of shelfing",
-                    icon: "error"
-                });
-            }
-        });
+    $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('error') && urlParams.get('error') === 'true') {
+            swal.fire({
+                title: "Cannot be edited within two weeks of shelfing",
+                icon: "error"
+            });
+        }
+    });
     
-    </script>
+</script>
 }
