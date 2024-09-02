@@ -4,13 +4,6 @@
 }
 
 <div class="header">
-    <div class="logo">
-        <img src="../../images/changing_logo.png" />
-        <span>全景產品管理後台</span>
-    </div>
-    <a asp-controller="Shipment" asp-action="Index" class="order-btn">
-        <input type="submit" value="待出貨清單" class="btn" />
-    </a>
     <div class="slogan-box">
         <p class="tagline d-inline">尋找最佳方案</p>
         <p>因應不同產業需求，提供最適合的資安解決方案</p>
@@ -19,24 +12,24 @@
 
 <div class="row">
     <div class="row col-md-12">
-        <div class="d-flex flex-column align-items-end">
+        <div class="d-flex flex-column align-items-end me-4">
             <div class="d-flex">
-                <a asp-action="Create" class="me-2 mb-2">
-                    <input type="submit" value="+ 新增產品" class="add-product btn btn-primary" />
+                <a asp-action="Create" class="me-2">
+                    <input type="submit" value="+ 新增產品" class="add-btn btn btn-primary" />
                 </a>
                 <a asp-action="CreateCategory">
-                    <input type="submit" value="+ 新增類別" class="add-product btn btn-secondary" />
+                    <input type="submit" value="+ 新增類別" class="add-btn btn btn-secondary" />
                 </a>
             </div>
-            <form asp-action="Index" method="get" class="col-4 mb-2">
+            @* <form class="col-4 mb-2">
                 <div class="input-group input-group-sm">
                     <input class="form-control" type="text" placeholder="Name" name="searchString" />
-                    <input class="btn btn-sm btn-primary" type="submit" value="Search" />
+                    <input class="btn btn-sm btn-primary search-btn" type="submit" value="Search" />
                 </div>
-            </form>
+            </form> *@
         </div>
     </div>
-    <div class="container p-4">
+    <div class="container p-3 ms-3">
         <div class="row">
             <div class="col-md-2 p-2 me-4">
                 @foreach (var item in Model.Categories)
@@ -54,11 +47,11 @@
                                 data-category-name="@item.Category.Name"
                                 data-name="@item.Name"
                                 data-description="@item.Description">
-                            <img class="mb-4" id="@item.Id" />
+                            <img class="mb-3" id="@item.Id" />
                             <div class="col-md-12 category-name d-inline">@item.Category.Name</div>
-                            <h5>@item.Name</h5>
-                            <div>@item.Description</div>
-                            <div class="product-item">
+                            <h5 class=" mt-3">@item.Name</h5>
+                            <div class="product-description pe-5">@item.Description</div>
+                            <div class="product-item mt-3">
                                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
                                 <a asp-action="Details" asp-route-id="@item.Id">Details</a>
@@ -74,11 +67,11 @@
                              data-name="@item.Name"
                              data-description="@item.Description">
                             <span class="product-label sold-out">已下架</span>
-                            <img class="mb-4" id="@item.Id" />
-                            <div class="col-md-12 category-name d-inline mt-4">@item.Category.Name</div>
-                            <h5>@item.Name</h5>
-                            <div>@item.Description</div>
-                            <div class="product-item">
+                            <img class="mb-3" id="@item.Id" />
+                            <div class="col-md-12 category-name d-inline">@item.Category.Name</div>
+                            <h5 class=" mt-3">@item.Name</h5>
+                            <div class="product-description pe-5">@item.Description</div>
+                            <div class="product-item mt-3">
                                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
                                 <a asp-action="Details" asp-route-id="@item.Id">Details</a>
@@ -92,7 +85,6 @@
 </div>
 @section Scripts {
 <script>
-
     $('.category-btn').on('click', function () {
             
         const id = $(this).attr('data-id');
@@ -109,28 +101,142 @@
             $('.product-area').empty();
 
             result.forEach(product => {
-                $('.product-area').append(`
-                    <div class="col-md-4 product-card">
-                        <img id="${product.id}" />
-                        <div class="col-md-12 category-name d-inline">
+                if (product.canOrder) {
+                    $('.product-area').append(`
+                        <div class="col-md-4 product-card">
+                            <img class="mb-3" id="${product.id}" />
+                            <div class="col-md-12 category-name d-inline">${name}</div>
+                            <h5 class=" mt-3">${product.name}</h5>
+                            <div class="product-description pe-5">${product.description}</div>
+                            <div class="product-item mt-3">
+                                <a asp-action="Edit" asp-route-id="id="${product.id}">Edit</a> |
+                                <a asp-action="Delete" asp-route-id="id="${product.id}">Delete</a> |
+                                <a asp-action="Details" asp-route-id="id="${product.id}">Details</a>
+                            </div>
+                            <button class="btn btn-primary plus-button">+</button>
                         </div>
-                        <div>
-                            ${product.name}
+                    `);
+                }
+                else {
+                    $('.product-area').append(`
+                        <div class="col-md-4 product-card">
+                            <span class="product-label sold-out">已下架</span>
+                            <img class="mb-3" id="id="${product.id}"" />
+                            <div class="col-md-12 category-name d-inline">${name}</div>
+                            <h5 class=" mt-3">${product.name}</h5>
+                            <div class="product-description pe-5">${product.description}</div>
+                            <div class="product-item mt-3">
+                                <a asp-action="Edit" asp-route-id="id="${product.id}">Edit</a> |
+                                <a asp-action="Delete" asp-route-id="id="${product.id}"">Delete</a> |
+                                <a asp-action="Details" asp-route-id="id="${product.id}"">Details</a>
+                            </div>
                         </div>
-                        <div class="category-description">
-                            ${product.description}
-                        </div>
-                        <button class="add-shipment">+</button>
-                        <a asp-action="Edit" asp-route-id="${product.id}">Edit</a>
-                    </div>
-                `);
+                    `);
+                }
             });
-
+            // if (product.canOrder)
+            // {
+            //     $('.product-area').append(`
+                    
+            //             <div class="col-md-4 product-card">
+            //                 <img class="mb-3" id="${product.id}" />
+            //                 <div class="col-md-12 category-name d-inline">${name}</div>
+            //                 <h5 class=" mt-3">${product.name}</h5>
+            //                 <div class="product-description pe-5">${product.description}</div>
+            //                 <div class="product-item mt-3">
+            //                     <a asp-action="Edit" asp-route-id="id="${product.id}"">Edit</a> |
+            //                     <a asp-action="Delete" asp-route-id="id="${product.id}"">Delete</a> |
+            //                     <a asp-action="Details" asp-route-id="id="${product.id}">Details</a>
+            //                 </div>
+            //                 <button class="btn btn-primary plus-button">+</button>
+            //             </div>
+            //     `);
+            // }
+            // else
+            // {
+            //     $('.product-area').append(`
+            //     <div class="col-md-4 product-card">
+            //         <span class="product-label sold-out">已下架</span>
+            //         <img class="mb-3" id="id="${product.id}"" />
+            //         <div class="col-md-12 category-name d-inline">${name}</div>
+            //         <h5 class=" mt-3">${product.name}</h5>
+            //         <div class="product-description pe-5">${product.description}</div>
+            //         <div class="product-item mt-3">
+            //             <a asp-action="Edit" asp-route-id="id="${product.id}"">Edit</a> |
+            //             <a asp-action="Delete" asp-route-id="id="${product.id}"">Delete</a> |
+            //             <a asp-action="Details" asp-route-id="id="${product.id}"">Details</a>
+            //         </div>
+            //     </div>
+            //     `);
+            // }
         })
         .catch(error => {
             console.error('錯誤:', error);
         });
     });
+
+    // $('.search-btn').on('click', function () {
+            
+    //     var searchStringValue = document.querySelector('input[name="searchString"]').value;
+
+    //     fetch(`/Products/SearchProduct?searchString=${searchStringValue}`, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //     })
+    //     .then(response => {
+    //         if (!response.ok) {
+    //             throw new Error('网络响应失败：' + response.status);
+    //         }
+    //         return response.text();
+    //     })
+    //     .then(text => {
+    //         $('.product-area').empty();
+    //         const result = JSON.parse(text);
+            
+    //         console.log('成功:', result);
+    //         result.forEach(product => {
+    //             if (product.canOrder) {
+    //                 $('.product-area').append(`
+
+    //                     <div class="col-md-4 product-card">
+    //                         <img class="mb-3" id="${product.id}" />
+    //                         <div class="col-md-12 category-name d-inline">${name}</div>
+    //                         <h5 class=" mt-3">${product.name}</h5>
+    //                         <div class="product-description pe-5">${product.description}</div>
+    //                         <div class="product-item mt-3">
+    //                             <a asp-action="Edit" asp-route-id="id="${product.id}"">Edit</a> |
+    //                             <a asp-action="Delete" asp-route-id="id="${product.id}"">Delete</a> |
+    //                             <a asp-action="Details" asp-route-id="id="${product.id}">Details</a>
+    //                         </div>
+    //                         <button class="btn btn-primary plus-button">+</button>
+    //                     </div>
+    //                 `);
+    //             }
+    //             else {
+    //                 $('.product-area').append(`
+    //                     <div class="col-md-4 product-card">
+    //                         <span class="product-label sold-out">已下架</span>
+    //                         <img class="mb-3" id="id="${product.id}"" />
+    //                         <div class="col-md-12 category-name d-inline">${name}</div>
+    //                         <h5 class=" mt-3">${product.name}</h5>
+    //                         <div class="product-description pe-5">${product.description}</div>
+    //                         <div class="product-item mt-3">
+    //                             <a asp-action="Edit" asp-route-id="id="${product.id}"">Edit</a> |
+    //                             <a asp-action="Delete" asp-route-id="id="${product.id}"">Delete</a> |
+    //                             <a asp-action="Details" asp-route-id="id="${product.id}"">Details</a>
+    //                         </div>
+    //                     </div>
+    //                 `);
+    //             }
+    //         });
+
+    //     })
+    //     .catch(error => {
+    //         console.error('錯誤:', error);
+    //     });
+    // });
 
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.add-shipment').forEach(button => {

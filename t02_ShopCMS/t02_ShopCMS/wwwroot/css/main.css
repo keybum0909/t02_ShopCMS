@@ -15,13 +15,11 @@
 
 .header .slogan-box .tagline { font-size: 30px; }
 
-.header .order-btn .btn { position: absolute; top: 75px;  right: 20px; font-size: 14px; color: #142e7c; text-align: right; line-height: 1.5; }
+.category-btn { background-color: #fff; color: #142E7C; border-radius: 10px; font-size: 20px; border: dashed 1px; }
 
-.add-product { background-color: #14527C; color: #eee; margin-bottom: 5px; }
+.category-btn:hover, .category-btn:active { background-color: #142E7C; color: #fff; border-color: #142E7C; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
 
-.category-btn { background-color: #142E7C; color: #eee; border-radius: 10px; font-size: 20px; }
-
-.product-card { box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25); padding: 15px; position: relative; text-align: left; }
+.product-card { width: 30%; margin: 0px 15px 21px 15px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25); padding: 15px; position: relative; text-align: left; }
 
 .category-name { background-color: #142E7C; color: #eee; border-radius: 25px; padding: 5px 15px; margin: 5px 0; }
 
@@ -29,15 +27,44 @@
 
 .product-label { padding: 5px 15px; }
 
-.plus-button { position: absolute; border-radius: 50%; right: 13px; bottom: 10px; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; background-color: #5955C4; }
+
 
 .sold-out { background-color: #6c757d; color: #fff; position: absolute; right: 0; top: 0;}
+
+.product-description { overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 14px; }
 
 img {height: 100px; width: 200px; margin-top: 10px; display: flex; justify-content: center; }
 .category-description { font-size: 12px; margin-bottom: 10px; }
 
 /*Create*/
+h4 { color: #142E7C; font-weight: bold; margin: 20px 0; }
+
+.form-container { box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); padding: 30px 20px; }
+
+.form-group label.required::after { content: " *"; color: red; }
+
+.custom-file-label { display: inline-block; padding: 6px 12px; width: calc(100% - 110px); border: 1px solid #ced4da; border-radius: .25rem;  color: #495057; background-color: #fff; cursor: pointer; }
+
+.custom-file-label::after { content: '選擇圖片'; display: inline-block; background-color: #004B9B; color: #fff; padding: 6px 12px; border-left: 1px solid #ced4da; border-radius: 0 .25rem .25rem 0; cursor: pointer; text-align: center; width: 100px; float: right; }
+
+.custom-file-input { display: none; }
 
 /*Shipment*/
 .shipment-list { display: flex; align-items: center; justify-content:center; }
 .category-item { background: #5955C4; color: #eee; }
+
+
+/*button*/
+.add-btn { background-color: #14527C; color: #eee; margin-bottom: 5px; border: transparent; padding: 8px 30px; }
+
+.add-btn:hover, .add-btn:active { background-color: #14527C; opacity: 60%; border: transparent; padding: 8px 30px; }
+
+.submit-btn { background-color: #004B9B; color: #fff; float: right; }
+
+.order-btn .btn { position: absolute; top: 75px; right: 300px; font-size: 14px; color: #142e7c; font-weight: bold; }
+
+.plus-button { border:transparent; position: absolute; border-radius: 50%; right: 13px; bottom: 15px; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; background-color: #5955C4; }
+
+.plus-button:hover, .plus-button:active { border:transparent; opacity:60%; background-color: #5955C4; }
+
+a { text-decoration: none; }
