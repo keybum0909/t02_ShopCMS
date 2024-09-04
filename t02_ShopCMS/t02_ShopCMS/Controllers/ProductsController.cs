@@ -182,5 +182,12 @@ namespace t02_ShopCMS.Controllers
             await _context.SaveChangesAsync();
             return View();
         }
+
+        [HttpGet]
+        public int OrderListNum()
+        {
+            var result = _productsService.OrderListNum();
+            return result;
+        }
     }
 }

@@ -17,8 +17,8 @@
                     <span style="text-decoration: none;">全景產品管理後台</span>
                 </div>
             </a>
-            <a asp-controller="Shipment" asp-action="Index" class="order-btn">
-                <input type="submit" value="待出貨清單" class="btn" />
+            <a asp-controller="Shipment" asp-action="Index">
+                <input type="submit" value="待出貨清單" class="order-btn btn" />
             </a>
         </div>
     </header>
@@ -30,13 +30,20 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - t02_ShopCMS - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022 - t02_ShopCMS -@*  <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> *@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    @RenderSection("Scripts", required: false)
+    @section Scripts {
+        <script>
+            $(document).ready(function () {
+                console.log("Document is ready!");
+            });
+        </script>
+    }
 </body>
 </html>

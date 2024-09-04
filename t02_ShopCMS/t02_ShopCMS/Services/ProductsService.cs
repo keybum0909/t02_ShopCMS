@@ -185,6 +185,12 @@ namespace t02_ShopCMS.Services
             return true;
         }
 
+        public int OrderListNum()
+        {
+            var orders = _context.OrderList.Count();
+            return orders;
+        }
+
         private string ViewImage(byte[] arrayImage)
         {
             string base64String = Convert.ToBase64String(arrayImage, 0, arrayImage.Length);
