@@ -15,10 +15,10 @@
         <div class="d-flex flex-column align-items-end me-4">
             <div class="d-flex">
                 <a asp-action="Create" class="me-2">
-                    <input type="submit" value="+ 新增產品" class="add-btn btn btn-primary" />
+                    <input type="submit" value="+ 新增產品" class="add-btn btn" />
                 </a>
                 <a asp-action="CreateCategory">
-                    <input type="submit" value="+ 新增類別" class="add-btn btn btn-secondary" />
+                    <input type="submit" value="+ 新增類別" class="add-btn btn" />
                 </a>
             </div>
             @* <form class="col-4 mb-2">
@@ -56,7 +56,7 @@
                                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
                                 <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                             </div>
-                            <button class="btn btn-primary plus-button">+</button>
+                            <button class="btn plus-button">+</button>
                         </div>
                     }
                     else
@@ -239,11 +239,11 @@
     // });
 
     document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.add-shipment').forEach(button => {
+        document.querySelectorAll('.plus-button').forEach(button => {
             button.addEventListener('click', function (event) {
                 event.preventDefault();
 
-                const productDiv = this.closest('.product-list');
+                const productDiv = this.closest('.product-card');
 
                 const productName = productDiv.getAttribute('data-name');
                 const productCategory = productDiv.getAttribute('data-category-name');

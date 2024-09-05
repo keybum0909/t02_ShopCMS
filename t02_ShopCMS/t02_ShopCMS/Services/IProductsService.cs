@@ -9,7 +9,8 @@ namespace t02_ShopCMS.Services
 {
     public interface IProductsService
     {
-        Task<Indexresp> QueryInit(string searchString);
+        Task<Indexresp> QueryInit();
+        List<Product> SearchProduct(string searchString);
         Task<List<Product>> CategoryFilter(int id);
         Task<DetailViewModel> Details(int? id);
         Task<bool> Create(Product product, IFormFile myImg);
@@ -18,5 +19,6 @@ namespace t02_ShopCMS.Services
         Task<Editresp> Edit(int? id);
         Task<Product> Delete(int? id);
         Task<bool> DeleteConfirmed(int? id);
+        int OrderListNum();
     }
 }
