@@ -17,7 +17,7 @@
                     <span style="text-decoration: none;">全景產品管理後台</span>
                 </div>
             </a>
-            <a asp-controller="Shipment" asp-action="Index">
+            <a asp-controller="Shipment" asp-action="Index" class="order-group">
                 <input type="submit" value="待出貨清單" class="order-btn btn" />
             </a>
         </div>
@@ -38,12 +38,6 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @RenderSection("Scripts", required: false)
-    @section Scripts {
-        <script>
-            $(document).ready(function () {
-                console.log("Document is ready!");
-            });
-        </script>
-    }
+    
 </body>
 </html>

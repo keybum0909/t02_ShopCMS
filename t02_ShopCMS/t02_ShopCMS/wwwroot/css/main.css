@@ -11,6 +11,8 @@
 
 .header .logo span { font-weight: bold; color: #142e7c; font-size: 25px; }
 
+.order-group { position: absolute; top: 75px; right: 300px; }
+
 /*Product*/
 .slogan-box { background-color: #e8f4f8; height: 170px; display: flex; flex-direction: column; text-align: center; justify-content: center; }
 
@@ -58,11 +60,11 @@ h4 { color: #142E7C; font-weight: bold; margin: 20px 0; }
 
 .submit-btn { background-color: #004B9B; color: #fff; float: right; }
 
-.order-btn { position: absolute; top: 75px; right: 300px; font-size: 14px; color: #142e7c; font-weight: bold; }
+.order-btn { font-size: 14px; color: #142e7c; font-weight: bold; }
 
 .order-btn:hover { color: #142e7c; border: transparent; opacity: 60%; }
 
-.plus-button { border: transparent; position: absolute; border-radius: 50%; right: 13px; bottom: 15px; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; background-color: #5955C4; }
+.plus-button { border: transparent; position: absolute; border-radius: 50%; right: 13px; bottom: 15px; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; background-color: #5955C4; color: #fff; }
 
 .plus-button:hover, .plus-button:active { border:transparent; opacity:60%; background-color: #5955C4; }
 
