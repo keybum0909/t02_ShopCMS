@@ -77,27 +77,31 @@ namespace t02_ShopCMS.Services
             {
                 var product = _context.Product.FirstOrDefault(x => x.Name == item.ProductName);
 
-                var shipment = new ShipmentList
+                if (product.CanOrder)
                 {
-                    ProductName = item.ProductName,
-                    ShipNumber = GenerateOrderNumber(product.CategoryId.ToString()),
-                    Amount = item.Amount,
-                    OrderTime = DateTime.Now
-                };
+                    var shipment = new ShipmentList
+                    {
+                        ProductName = item.ProductName,
+                        ShipNumber = GenerateOrderNumber(product.CategoryId.ToString()),
+                        Amount = item.Amount,
+                        OrderTime = DateTime.Now
+                    };
 
-                _context.ShipmentList.Add(shipment);
-                product.Stock -= item.Amount;
+                    _context.ShipmentList.Add(shipment);
+                    product.Stock -= item.Amount;
 
-                var orderItem = _context.OrderList.FirstOrDefault(x => x.ProductName == item.ProductName);
-                if (orderItem != null)
-                {
-                    _context.OrderList.Remove(orderItem);
+                    var orderItem = _context.OrderList.FirstOrDefault(x => x.ProductName == item.ProductName);
+                    if (orderItem != null)
+                    {
+                        _context.OrderList.Remove(orderItem);
+                    }
+
+                    await _context.SaveChangesAsync();
+                    return true;
                 }
-
-                await _context.SaveChangesAsync();
             }
 
-            return true;
+            return false;
         }
 
         public async Task<bool> Delete(int? id)
