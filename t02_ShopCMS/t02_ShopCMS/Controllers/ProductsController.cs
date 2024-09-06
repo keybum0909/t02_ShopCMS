@@ -95,47 +95,15 @@ namespace t02_ShopCMS.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IActionResult> EditSave(int id, DetailViewModel dvm, IFormFile myImg)
+        public async Task<IActionResult> EditSave(DetailViewModel dvm, IFormFile myImg)
         {
-            if (id != dvm.Product.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
+                var result = await _productsService.EditSave(dvm, myImg);
+                if(result == true)
                 {
-                    //IFormFile name對應input type=file的name屬性)
-                    if (ModelState.IsValid)
-                    {
-                        if (myImg != null)
-                        {
-                            //用IFormFile myimg欄位接收檔案
-                            //用MemoryStream()把檔案轉成Byte陣列
-                            using (var ms = new MemoryStream())
-                            {
-                                myImg.CopyTo(ms);
-                                dvm.Product.Image = ms.ToArray();
-                            }
-                        }
-                    }
-                    _context.Update(dvm.Product);
-                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductExists(dvm.Product.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                //重新路由
-                return RedirectToAction(nameof(Index));
             }
             return RedirectToAction(nameof(Edit));
         }

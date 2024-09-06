@@ -154,6 +154,37 @@ namespace t02_ShopCMS.Services
             return res;
         }
 
+        public async Task<bool> EditSave(DetailViewModel dvm, IFormFile myImg)
+        {
+            var product = _context.Product.Where(x => x.Id == dvm.Product.Id).FirstOrDefault();
+            if(product != null)
+            {
+                product.Name = dvm.Product.Name;
+                product.Description = dvm.Product.Description;
+                product.Price = dvm.Product.Price;
+                product.Stock = dvm.Product.Stock;
+                product.CanOrder = dvm.Product.CanOrder;
+                product.Content = dvm.Product.Content;
+                product.CategoryId = dvm.Product.CategoryId;
+
+                if (myImg != null)
+                {
+                    //用IFormFile myimg欄位接收檔案
+                    //用MemoryStream()把檔案轉成Byte陣列
+                    using (var ms = new MemoryStream())
+                    {
+                        myImg.CopyTo(ms);
+                        product.Image = ms.ToArray();
+                    }
+                }
+                _context.Update(product);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            return false;
+        }
+
         public async Task<Product> Delete(int? id)
         {
             var product = await _context.Product
