@@ -2,39 +2,42 @@
 @{
     ViewData["Title"] = "Shipment";
 }
+
 <div class="container col-md-7">
     <h4>待出貨清單</h4>
-    <div class="form-container">
-        <div class="shipment-list">
+    <div class="form-container row d-flex justify-content-center align-items-center">
+        <div class="shipment-list row p-0 mt-3">
             @foreach (var item in Model)
             {
-                <div class="form-check me-3">
-                    <input class="form-check-input order-checkbox" type="checkbox" value="" id="flexCheckDefault" data-id="@item.Id" data-product-name="@item.ProductName" data-amount="@item.Amount">
-                    <label class="form-check-label" for="flexCheckDefault"></label>
-                </div>
-                <div class="row shipment-item col-11 d-flex align-items-center" data-product-name="@item.ProductName" data-category="@item.Category">
-                    <img class="col-3" />
-                    <div class="col-5 title-name">
-                        <div class="category-item d-inline" data-category="@item.Category">
-                            @item.Category
-                        </div>
-                        <div class="mt-2" data-product-name="@item.ProductName" style="color: #14527C; font-weight: bold;">
-                            @item.ProductName
-                        </div>
+                <div class="mb-4 d-flex justify-content-center align-items-center">
+                    <div class="form-check col-md-1 d-flex align-items-center">
+                        <input class="form-check-input order-checkbox" type="checkbox" value="" id="flexCheckDefault" data-id="@item.Id" data-product-name="@item.ProductName" data-amount="@item.Amount">
+                        <label class="form-check-label" for="flexCheckDefault"></label>
                     </div>
-                    <div class="col-2 quantity-control">
-                        <input type='button' value='-' class='qtyminus' field='quantity' />
-                        <input type='text' value='@item.Amount' class='qty col-3' name='quantity' data-amount="@item.Amount" data-id="@item.Id" />
-                        <input type='button' value='+' class='qtyplus' field='quantity' />
-                    </div>
-                    <div class="col-1 form-group">
-                        <input type="submit" value="刪除" class="delete-btn btn-danger btn" data-id="@item.Id" />
+                    <div class="row shipment-item col-md-11 d-flex align-items-center" data-product-name="@item.ProductName" data-category="@item.Category">
+                        <img class="col-md-3" />
+                        <div class="col-md-5 title-name">
+                            <div class="category-item d-inline" data-category="@item.Category">
+                                @item.Category
+                            </div>
+                            <div class="mt-2" data-product-name="@item.ProductName" style="color: #14527C; font-weight: bold;">
+                                @item.ProductName
+                            </div>
+                        </div>
+                        <div class="col-md-3 quantity-control me-5">
+                            <input type='button' value='-' class='qtyminus qty-btn d-flex justify-content-center align-items-center' field='quantity' />
+                            <input type='text' value='@item.Amount' class='qty text-center' name='quantity' data-amount="@item.Amount" data-id="@item.Id" readonly />
+                            <input type='button' value='+' class='qtyplus qty-btn d-flex justify-content-center align-items-center' field='quantity' />
+                        </div>
+                        <div class="col-md-1 form-group ms-4">
+                            <input type="submit" value="刪除" class="delete-btn btn-danger btn" data-id="@item.Id" />
+                        </div>
                     </div>
                 </div>
             }
         </div>
         <div>
-            <input type="submit" value="出貨" class="submit-btn btn mb-3" />
+            <input type="submit" value="出貨" class="submit-btn btn" />
         </div>
     </div>
 </div>
@@ -117,7 +120,7 @@
         saveArray.push({ "ProductName": productName, "Amount": amount })
     })
 
-    $('.submit-btn').on('click', function () {
+    $('.submit-btn').on('click', async function () {
         console.log(saveArray)
         if (saveArray.length === 0) {
             swal.fire({
@@ -125,33 +128,53 @@
                 icon: "error"
             })
         } else {
-            fetch('/Shipment/Order', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(saveArray)
-            })
-                .then(response => response.json())
-                .then(result => {
-                    console.log('成功:', result);
-                    if (result == { success = true }) {
-                        swal.fire({
-                            title: "Your product have been sent",
-                            icon: "success"
-                        })
+            try{
+                const response = await fetch('/Shipment/Order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(saveArray)
+                })
+                const data = await response.json();
+                if (data.success) {
+                    swal.fire({
+                        icon: 'success',
+                        title: '訂單成功',
+                        text: '您的訂單已經成功處理',
+                        confirmButtonText: '確定'
+                    }).then(() => {
                         location.reload();
                         saveArray = [];
-                    }else{
-                        swal.fire({
-                            title: "Error occurred: 此商品已下架",
-                            icon: "error",
-                        });
-                    }
-                })
-                .catch(error => {
+                    })
+                } else {
+                    swal.fire({
+                        title: "Error occurred: 此商品已下架",
+                        icon: "error",
+                        confirmButtonText: '確定'
+                    });
+                }
+            }
+            
+                // .then(result => {
+                //     console.log('成功:', result);
+                //     if (result == { success = true }) {
+                //         swal.fire({
+                //             title: "Your product have been sent",
+                //             icon: "success"
+                //         })
+                //         location.reload();
+                //         saveArray = [];
+                //     }else{
+                //         swal.fire({
+                //             title: "Error occurred: 此商品已下架",
+                //             icon: "error",
+                //         });
+                //     }
+                // })
+                catch(error) {
                     console.error('錯誤:', error);
-                });
+                }
         }
     })
 

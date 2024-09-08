@@ -279,7 +279,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('error') && urlParams.get('error') === 'true') {
             swal.fire({
-                title: "Cannot be edited within two weeks of shelfing",
+                title: "此商品於兩周內上架，不可編輯",
                 icon: "error"
             });
         }

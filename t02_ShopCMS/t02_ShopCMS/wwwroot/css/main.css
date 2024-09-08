@@ -11,7 +11,7 @@
 
 .header .logo span { font-weight: bold; color: #142e7c; font-size: 25px; }
 
-.order-group { position: absolute; top: 75px; right: 300px; }
+.order-group { position: absolute; top: 75px; right: 140px; }
 
 /*Product*/
 .slogan-box { background-color: #e8f4f8; height: 170px; display: flex; flex-direction: column; text-align: center; justify-content: center; }
@@ -47,18 +47,23 @@ h4 { color: #142E7C; font-weight: bold; margin: 20px 0; }
 .custom-file-input { display: none; }
 
 /*Shipment*/
-.shipment-list { display: flex; align-items: center; justify-content:center; }
+.category-item { font-size: 13px; background: #5955C4; color: #eee; border-radius: 50px; padding: 5px 15px; }
 
-.category-item { font-size: 15px; background: #5955C4; color: #eee; border-radius: 50px; padding: 5px 15px; }
+.quantity-control { display: flex; align-items: center; width: 50px; }
 
-.quantity-control { display: flex; align-items: center; }
+.qtyminus { border-radius: 5px 0 0 5px; }
+
+.qty { width: 50px; height: 25px; }
+
+.qtyplus { border-radius: 0 5px 5px 0; }
+
 
 /*button*/
 .add-btn { background-color: #14527C; color: #eee; margin-bottom: 5px; border: transparent; padding: 8px 30px; }
 
-.add-btn:hover, .add-btn:active { background-color: #14527C; opacity: 60%; border: transparent; padding: 8px 30px; }
+.add-btn:hover, .add-btn:active { color: #fff; background-color: #14527C; opacity: 60%; border: transparent; padding: 8px 30px; }
 
-.submit-btn { background-color: #004B9B; color: #fff; float: right; }
+.submit-btn { background-color: #004B9B; color: #fff; float: right; padding: 5px 30px; }
 
 .order-btn { font-size: 14px; color: #142e7c; font-weight: bold; }
 
@@ -72,5 +77,10 @@ h4 { color: #142E7C; font-weight: bold; margin: 20px 0; }
 
 .category-btn:hover, .category-btn:active { background-color: #142E7C; color: #fff; border-color: #142E7C; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
 
+.qty-btn { border-width: 1px; height: 25px; background-color: #fff; }
 
-a { text-decoration: none; }
+.qty-btn:hover { background-color: #D6CFCF; }
+
+a {
+    text-decoration: none;
+}
