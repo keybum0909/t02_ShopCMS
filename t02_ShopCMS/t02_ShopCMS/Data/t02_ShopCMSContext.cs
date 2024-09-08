@@ -98,16 +98,16 @@ namespace t02_ShopCMS.Data
                 entity.Property(e => e.ProductName)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .HasComment("下單商品名稱");
+                    .HasComment("下單產品名稱");
 
                 entity.Property(e => e.Amount)
                     .IsRequired()
-                    .HasComment("下單商品數量");
+                    .HasComment("下單產品數量");
 
                 entity.Property(e => e.Category)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .HasComment("下單商品類別");
+                    .HasComment("下單產品類別");
 
                 entity.Property(e => e.CreateTime)
                     .IsRequired()
@@ -131,16 +131,16 @@ namespace t02_ShopCMS.Data
                 entity.Property(e => e.ProductName)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .HasComment("出貨商品名稱");
+                    .HasComment("出貨產品名稱");
 
                 entity.Property(e => e.ShipNumber)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .HasComment("出貨商品編號");
+                    .HasComment("出貨產品編號");
 
                 entity.Property(e => e.Amount)
                     .IsRequired()
-                    .HasComment("出貨商品數量");
+                    .HasComment("出貨產品數量");
 
                 entity.Property(e => e.OrderTime)
                     .IsRequired()

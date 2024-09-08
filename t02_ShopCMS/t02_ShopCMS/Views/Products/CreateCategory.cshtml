@@ -6,28 +6,23 @@
     ViewData["Title"] = "Create Category";
 }
 
-<h1>CreateCategory</h1>
-
-<h4>Category</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12 row form-container">
+        <h4>新增類別</h4>
         <form asp-action="CreateCategory">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+            <div class="form-group row mb-3">
+                <label asp-for="Name" class="col-md-1 control-label required" required>類別名稱</label>
+                <div class="col-md-11">
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
             </div>
             <div class="form-group">
-                <input type="submit" value="Categoey" class="btn btn-primary" />
+                <input type="submit" value="新增" class="btn submit-btn mt-3" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

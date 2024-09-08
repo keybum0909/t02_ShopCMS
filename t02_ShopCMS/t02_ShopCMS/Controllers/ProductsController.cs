@@ -58,7 +58,7 @@ namespace t02_ShopCMS.Controllers
         public IActionResult Create()
         {
             //傳Categories model給create view
-            ViewData["Categories"] = new SelectList(_context.Set<Category>().Where(c => c.Id != 1), "Id", "Name");
+            ViewData["Categories"] = new SelectList(_context.Set<Category>().Where(c => c.Name != "全部類別"), "Id", "Name");
             return View();
         }
 

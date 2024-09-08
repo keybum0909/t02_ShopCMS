@@ -4,67 +4,71 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
-<div>
-    <div class="row">
+<div class="row">
+    <div class="col-md-12 row form-container">
+        <h4>產品資訊</h4>
         @*//圖片*@
-        <div class = "col-sm-5">
-            <img class="img-fluid mx-auto d-block";" src="@Html.DisplayFor(model => model.Imgsrc)" />    
+        <div class="col-md-4 me-3">
+            <img class="img-fluid d-block product-image" src="@Html.DisplayFor(model => model.Imgsrc)" />    
         </div>
         
-        <div class = "col-sm-7">
-            @*//名稱*@
-            <p class="text-secondary mb-0">
-                @Html.DisplayNameFor(model => model.Product.Name)
+        <div class="col-md-8 row">
+            <div class="col-md-6 mb-1">
+                @*//名稱*@
+                <p class="detail-title m-0">
+                    產品名稱:
+                </p>
+                <p>
+                    @Html.DisplayFor(model => model.Product.Name)
+                </p>
+            </div>
+            <div class="col-md-6 mb-1">
+                @*//類別*@
+                <p class="detail-title m-0">
+                    產品類別:
+                </p>
+                <p>
+                    @Html.DisplayFor(model => model.Product.Name)
+                </p>
+            </div>
+            @*//價格*@
+            <div class="col-md-6 mb-1">
+                <p class="detail-title m-0">
+                    價格:
+                </p>
+                <p>
+                    @Html.DisplayFor(model => model.Product.Price)
+                </p>
+            </div>
+            @*//庫存*@
+            <div class="col-md-6 mb-1">
+                <p class="detail-title m-0">
+                    庫存:
+                </p>
+                <p>
+                    @Html.DisplayFor(model => model.Product.Stock)
+                </p>
+            </div>
+            @*//簡介*@
+            <p class="detail-title m-0">
+                產品簡介:
             </p>
             <p>
-                 @Html.DisplayFor(model => model.Product.Name)
-            </p>
-            @*//簡介*@
-            <p class="text-secondary mb-0">
-                @Html.DisplayNameFor(model => model.Product.Description)
-            </p>
-            <p style="height:200px;">
                 @Html.DisplayFor(model => model.Product.Description)  
             </p>
-            <div class="row">
-                @*//價格*@
-                <div class = "col-sm-6">
-                    <p class="text-secondary mb-2">
-                        @Html.DisplayNameFor(model => model.Product.Price)
-                    </p>
-                    <p>
-                        @Html.DisplayFor(model => model.Product.Price)
-                    </p>
-                </div>
-                @*//庫存*@
-                <div class = "col-sm-6">
-                    <p class="text-secondary mb-2">
-                        @Html.DisplayNameFor(model => model.Product.Stock)
-                    </p>
-                    <p>
-                        @Html.DisplayFor(model => model.Product.Stock)   
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <hr />
-    @*//內容*@
-    <div class = "row">
-        <div class="col-12">
-            <p class="text-secondary">
-                @Html.DisplayNameFor(model => model.Product.Content)
+            @*//內容*@
+            <p class="detail-title m-0">
+                產品內容:
             </p>
             <p>
                 @Html.Raw(Model.Product.Content)
             </p>
         </div>
-        
+        <div class="form-group">
+        </div>
+        <form asp-action="Edit" asp-route-id="@Model.Product.Id">
+            <button type="submit" class="btn submit-btn">編輯產品</button>
+        </form>
     </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Product.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+    

@@ -200,11 +200,27 @@ namespace t02_ShopCMS.Services
             return false;
         }
 
-        public async Task<Product> Delete(int? id)
+        public async Task<DetailViewModel> Delete(int? id)
         {
-            var product = await _context.Product
-            .FirstOrDefaultAsync(m => m.Id == id);
-            return product;
+            DetailViewModel dvm = new();
+            if (id != null)
+            {
+                var product = await _context.Product
+                                .Include(p => p.Category)
+                                .FirstOrDefaultAsync(m => m.Id == id);
+                if (product != null)
+                {
+                    dvm.Product = product;
+                    if (product.Image != null)
+                    {
+                        dvm.Imgsrc = ViewImage(product.Image);
+                    }
+                }
+
+            }
+
+            var result = dvm;
+            return result;
         }
 
         public async Task<bool> DeleteConfirmed(int? id)

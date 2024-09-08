@@ -18,7 +18,7 @@ namespace t02_ShopCMS.Services
 
         Task<Editresp> Edit(int? id);
         Task<bool> EditSave(DetailViewModel dvm, IFormFile myImg);
-        Task<Product> Delete(int? id);
+        Task<DetailViewModel> Delete(int? id);
         Task<bool> DeleteConfirmed(int? id);
         int OrderListNum();
     }

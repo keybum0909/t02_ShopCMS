@@ -149,29 +149,12 @@
                     })
                 } else {
                     swal.fire({
-                        title: "Error occurred: 此商品已下架",
+                        title: "Error occurred: 此產品已下架",
                         icon: "error",
                         confirmButtonText: '確定'
                     });
                 }
             }
-            
-                // .then(result => {
-                //     console.log('成功:', result);
-                //     if (result == { success = true }) {
-                //         swal.fire({
-                //             title: "Your product have been sent",
-                //             icon: "success"
-                //         })
-                //         location.reload();
-                //         saveArray = [];
-                //     }else{
-                //         swal.fire({
-                //             title: "Error occurred: 此商品已下架",
-                //             icon: "error",
-                //         });
-                //     }
-                // })
                 catch(error) {
                     console.error('錯誤:', error);
                 }
