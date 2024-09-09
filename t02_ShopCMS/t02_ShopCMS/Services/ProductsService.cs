@@ -28,10 +28,25 @@ namespace t02_ShopCMS.Services
             
             var categories = await _context.Category.ToListAsync();
 
+            Dictionary<int, List<string>> imageArr = new();
+
+            foreach (var item in products)
+            {
+                if (products != null)
+                {
+                    if (item.Image != null)
+                    {
+                        var imageList = new List<string> { ViewImage(item.Image) };
+                        imageArr[item.Id] = imageList;
+                    }
+                }
+            }
+
             Indexresp result = new()
             {
                 Products = products,
-                Categories = categories
+                Categories = categories,
+                Imgsrc = imageArr
             };
 
             return result;
