@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Framework;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +16,16 @@ namespace t02_ShopCMS.Services
     public class ShipmentService : IShipmentService
     {
         private readonly t02_ShopCMSContext _context;
-        public ShipmentService(t02_ShopCMSContext context)
+        private readonly ILogger<IShipmentService> _logger;
+        public ShipmentService(t02_ShopCMSContext context, ILogger<IShipmentService> logger)
         {
             _context = context;
+            _logger= logger;
         }
 
         public List<OrderList> QueryInit()
         {
+            _logger.LogTrace("取得待出貨列表內產品");
             var queryInitData = _context.OrderList.OrderByDescending(x => x.CreateTime).Select(x => new OrderList
             {
                 Id = x.Id,
@@ -35,6 +40,7 @@ namespace t02_ShopCMS.Services
 
         public async Task<List<OrderList>> SaveOrder([FromBody] SaveDatareq req)
         {
+            _logger.LogTrace("確認產品是否已於待出貨清單內");
             bool ReadyInDatabase = _context.OrderList.Any(x => x.ProductName == req.ProductName);
             var orderProoductId = _context.Product.Where(x => x.Name == req.ProductName).Select(x => x.Id).FirstOrDefault();
             if (!ReadyInDatabase)
@@ -48,6 +54,7 @@ namespace t02_ShopCMS.Services
                     CreateTime = DateTime.Now
                 };
 
+                _logger.LogTrace("新增產品於資料表OrderList");
                 _context.OrderList.Add(shipment);
             }
             else
@@ -55,16 +62,19 @@ namespace t02_ShopCMS.Services
                 var newData = _context.OrderList.Where(x => x.ProductName == req.ProductName).ToList();
                 foreach (var item in newData)
                 {
-                    item.Amount = req.Amount;
+                    _logger.LogTrace("新增產品於資料表OrderList");
+                    item.Amount += req.Amount;
                 }
             }
 
             try
             {
+                _logger.LogTrace("資料表更新");
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "資料表更新失敗");
                 Console.WriteLine(ex.Message);
             }
             return await _context.OrderList.ToListAsync();

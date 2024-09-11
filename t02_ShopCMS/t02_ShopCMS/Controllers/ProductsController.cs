@@ -145,9 +145,14 @@ namespace t02_ShopCMS.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCategory(Category category)
         {
-            _context.Category.Add(category);
-            await _context.SaveChangesAsync();
+            if(category != null)
+            {
+                _context.Category.Add(category);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
             return View();
+            
         }
 
         [HttpGet]
