@@ -32,10 +32,17 @@
     <div class="container p-3 ms-3">
         <div class="row">
             <div class="col-md-2 p-2 me-4">
-                @foreach (var item in Model.Categories)
-                {
-                    <button class="btn category-btn mb-3 w-100" data-id="@item.Id" data-name="@item.Name">@item.Name</button>
-                }
+                <ul class="nav nav-pills nav-fill">
+                    <li class="nav-item">
+                        <a class="btn category-btn active mb-3 w-100">全部產品</a>
+                    </li>
+                    @foreach (var item in Model.Categories)
+                    {
+                        <li class="nav-item">
+                            <a class="btn category-btn mb-3 w-100" data-id="@item.Id" data-name="@item.Name">@item.Name</a>
+                        </li>
+                    }
+                </ul>
             </div>
             <div class="col-md-10 row product-area pe-4">
                 @foreach (var item in Model.Products)
@@ -43,13 +50,15 @@
                     @if (item.CanOrder)
                     {
                         <div class="col-md-4 product-card"
-                                data-image="@item.Image"
                                 data-category-name="@item.Category.Name"
                                 data-name="@item.Name"
                                 data-description="@item.Description">
-                            <img class="mb-3" id="@item.Id" />
+                            @foreach (var img in Model.Imgsrc[item.Id])
+                            {
+                                <img class="mb-3" src="@img" />
+                            }
                             <div class="col-md-12 category-name d-inline">@item.Category.Name</div>
-                            <h5 class=" mt-3">@item.Name</h5>
+                            <h5 class="title-name mt-2">@item.Name</h5>
                             <div class="product-description pe-5">@item.Description</div>
                             <div class="product-item mt-3">
                                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
@@ -62,14 +71,16 @@
                     else
                     {
                         <div class="col-md-4 product-card"
-                             data-image="@item.Image"
                              data-category-name="@item.Category.Name"
                              data-name="@item.Name"
                              data-description="@item.Description">
                             <span class="product-label sold-out">已下架</span>
-                            <img class="mb-3" id="@item.Id" />
+                            @foreach (var img in Model.Imgsrc[item.Id])
+                            {
+                                <img class="mb-3" src="@img" />
+                            }
                             <div class="col-md-12 category-name d-inline">@item.Category.Name</div>
-                            <h5 class=" mt-3">@item.Name</h5>
+                            <h5 class="title-name mt-2">@item.Name</h5>
                             <div class="product-description pe-5">@item.Description</div>
                             <div class="product-item mt-3">
                                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
@@ -134,41 +145,6 @@
                     `);
                 }
             });
-            // if (product.canOrder)
-            // {
-            //     $('.product-area').append(`
-                    
-            //             <div class="col-md-4 product-card">
-            //                 <img class="mb-3" id="${product.id}" />
-            //                 <div class="col-md-12 category-name d-inline">${name}</div>
-            //                 <h5 class=" mt-3">${product.name}</h5>
-            //                 <div class="product-description pe-5">${product.description}</div>
-            //                 <div class="product-item mt-3">
-            //                     <a asp-action="Edit" asp-route-id="id="${product.id}"">Edit</a> |
-            //                     <a asp-action="Delete" asp-route-id="id="${product.id}"">Delete</a> |
-            //                     <a asp-action="Details" asp-route-id="id="${product.id}">Details</a>
-            //                 </div>
-            //                 <button class="btn btn-primary plus-button">+</button>
-            //             </div>
-            //     `);
-            // }
-            // else
-            // {
-            //     $('.product-area').append(`
-            //     <div class="col-md-4 product-card">
-            //         <span class="product-label sold-out">已下架</span>
-            //         <img class="mb-3" id="id="${product.id}"" />
-            //         <div class="col-md-12 category-name d-inline">${name}</div>
-            //         <h5 class=" mt-3">${product.name}</h5>
-            //         <div class="product-description pe-5">${product.description}</div>
-            //         <div class="product-item mt-3">
-            //             <a asp-action="Edit" asp-route-id="id="${product.id}"">Edit</a> |
-            //             <a asp-action="Delete" asp-route-id="id="${product.id}"">Delete</a> |
-            //             <a asp-action="Details" asp-route-id="id="${product.id}"">Details</a>
-            //         </div>
-            //     </div>
-            //     `);
-            // }
         })
         .catch(error => {
             console.error('錯誤:', error);
@@ -279,7 +255,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('error') && urlParams.get('error') === 'true') {
             swal.fire({
-                title: "Cannot be edited within two weeks of shelfing",
+                    title: "此產品於兩周內上架，不可編輯",
                 icon: "error"
             });
         }

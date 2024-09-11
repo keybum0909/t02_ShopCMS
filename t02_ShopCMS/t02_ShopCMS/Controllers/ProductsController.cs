@@ -58,7 +58,7 @@ namespace t02_ShopCMS.Controllers
         public IActionResult Create()
         {
             //傳Categories model給create view
-            ViewData["Categories"] = new SelectList(_context.Set<Category>().Where(c => c.Id != 1), "Id", "Name");
+            ViewData["Categories"] = new SelectList(_context.Set<Category>().Where(c => c.Name != "全部類別"), "Id", "Name");
             return View();
         }
 
@@ -85,7 +85,6 @@ namespace t02_ShopCMS.Controllers
             var result = await _productsService.Edit(id);
             if (result.Product == null)
             { 
-                ViewBag.ErrorMessage = "此商品於兩周內上架，不可編輯";
                 return RedirectToAction("Index", new { Id = id, error = "true" });
             }
             return View(result);
@@ -146,9 +145,14 @@ namespace t02_ShopCMS.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCategory(Category category)
         {
-            _context.Category.Add(category);
-            await _context.SaveChangesAsync();
+            if(category != null)
+            {
+                _context.Category.Add(category);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
             return View();
+            
         }
 
         [HttpGet]

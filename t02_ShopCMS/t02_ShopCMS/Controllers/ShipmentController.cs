@@ -65,7 +65,7 @@ namespace t02_ShopCMS.Controllers
             }
             else
             {
-                ViewBag.alertSign = "刪除商品發生錯誤";
+                ViewBag.alertSign = "刪除產品發生錯誤";
                 return Json(new { success = false });
             }
         }

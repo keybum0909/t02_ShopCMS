@@ -7,6 +7,6 @@ namespace t02_ShopCMS.Models
     {
         public List<Product> Products { get; set; }
         public List<Category> Categories { get; set; }
-        //public string Imgsrc { get; set; }
+        public Dictionary<int, List<string>> Imgsrc { get; set; }
     }
 }
