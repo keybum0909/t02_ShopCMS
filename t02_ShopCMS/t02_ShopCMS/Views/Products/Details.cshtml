@@ -64,11 +64,76 @@
                 @Html.Raw(Model.Product.Content)
             </p>
         </div>
-        <div class="form-group">
+        <div class="col-md form-group">
+            <form asp-action="Edit" asp-route-id="@Model.Product.Id">
+                <button type="submit" class="btn submit-btn">編輯產品</button>
+            </form>
+            <form method="post" id="deleteForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="Id" value="@Model.Product.Id" />
+                <input type="submit" value="刪除產品" class="delete-btn btn btn-danger me-2" data-id="@Model.Product.Id" />
+            </form>
         </div>
-        <form asp-action="Edit" asp-route-id="@Model.Product.Id">
-            <button type="submit" class="btn submit-btn">編輯產品</button>
-        </form>
     </div>
 </div>
-    
+@section Scripts {
+    <script>
+        $('.delete-btn').on('click', function (e) {
+            e.preventDefault();
+
+            const id = $(this).attr('data-id');
+            const token = $('input[name="__RequestVerificationToken"]').val();
+
+            swal.fire({
+                title: '您的產品即將被刪除',
+                text: '產品刪除後將無法復原，請問您是否要刪除產品?',
+                icon: 'warning',
+                confirmButtonText: '確定',
+                cancelButtonText: '取消',
+                showCancelButton: true,
+                closeModal: false,
+                allowOutsideClick: false,
+                closeOnConfirm: false,
+                closeOnCancel: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteData(id, token);
+                } else {
+                    swal.fire({ title: "產品已被取消刪除" });
+                }
+            });
+        });
+
+        function deleteData(id, token) {
+            fetch(`/Products/Delete?id=${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        swal.fire({
+                            title: "您的產品已被刪除",
+                            icon: "success",
+                        }).then(() => {
+                            window.location.href = '/';
+                        });
+                    } else {
+                        swal.fire({
+                            title: "Error occurred while deleting your product.",
+                            icon: "error",
+                        });
+                    }
+                })
+                .catch(error => {
+                    swal.fire({
+                        title: "Error occurred: " + error.message,
+                        icon: "error",
+                    });
+                });
+        }
+    </script>
+}

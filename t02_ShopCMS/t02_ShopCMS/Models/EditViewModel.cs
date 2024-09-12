@@ -4,7 +4,7 @@ using t02_ShopCMS.Entity;
 
 namespace t02_ShopCMS.Models
 {
-    public class Editresp
+    public class EditViewModel
     {
         public Product Product { get; set; }
         public string Imgsrc { get; set; }

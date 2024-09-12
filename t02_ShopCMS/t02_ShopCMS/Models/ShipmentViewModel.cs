@@ -3,10 +3,9 @@ using t02_ShopCMS.Entity;
 
 namespace t02_ShopCMS.Models
 {
-    public class Indexresp
+    public class ShipmentViewModel
     {
-        public List<Product> Products { get; set; }
-        public List<Category> Categories { get; set; }
+        public List<OrderList> Orders { get; set; }
         public Dictionary<int, List<string>> Imgsrc { get; set; }
     }
 }

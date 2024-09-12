@@ -23,10 +23,10 @@ namespace t02_ShopCMS.Services
             _logger= logger;
         }
 
-        public List<OrderList> QueryInit()
+        public ShipmentViewModel QueryInit()
         {
             _logger.LogTrace("取得待出貨列表內產品");
-            var queryInitData = _context.OrderList.OrderByDescending(x => x.CreateTime).Select(x => new OrderList
+            var orders = _context.OrderList.OrderByDescending(x => x.CreateTime).Select(x => new OrderList
             {
                 Id = x.Id,
                 ProductId = x.ProductId,
@@ -34,6 +34,27 @@ namespace t02_ShopCMS.Services
                 Amount = x.Amount,
                 Category = x.Category
             }).ToList();
+
+            _logger.LogTrace("圖片轉Base64");
+            Dictionary<int, List<string>> imageArr = new();
+            foreach (var item in orders)
+            {
+                if (orders != null)
+                {
+                    var productImage = _context.Product.Where(x => x.Id == item.ProductId).Select(x => x.Image).ToList();
+                    foreach (var image in productImage)
+                    {
+                        var imageList = new List<string> { "data:image/png;base64," + Convert.ToBase64String(image, 0, image.Length) };
+                        imageArr[item.ProductId] = imageList;
+                    }
+                }
+            }
+
+            var queryInitData = new ShipmentViewModel
+            {
+                Orders = orders,
+                Imgsrc = imageArr
+            };
 
             return queryInitData;
         }
