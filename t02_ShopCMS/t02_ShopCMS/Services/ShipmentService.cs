@@ -75,7 +75,6 @@ namespace t02_ShopCMS.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "資料表更新失敗");
-                Console.WriteLine(ex.Message);
             }
             return await _context.OrderList.ToListAsync();
 
@@ -87,6 +86,7 @@ namespace t02_ShopCMS.Services
             {
                 var product = _context.Product.FirstOrDefault(x => x.Name == item.ProductName);
 
+                _logger.LogTrace("確認是否下架");
                 if (product.CanOrder)
                 {
                     var shipment = new ShipmentList
@@ -97,25 +97,29 @@ namespace t02_ShopCMS.Services
                         OrderTime = DateTime.Now
                     };
 
+                    _logger.LogTrace("出貨後產生出貨清單");
                     _context.ShipmentList.Add(shipment);
                     product.Stock -= item.Amount;
 
+                    _logger.LogTrace("出貨後將出貨列表移除");
                     var orderItem = _context.OrderList.FirstOrDefault(x => x.ProductName == item.ProductName);
                     if (orderItem != null)
                     {
                         _context.OrderList.Remove(orderItem);
                     }
 
+                    _logger.LogTrace("資料庫更動");
                     await _context.SaveChangesAsync();
                     return true;
                 }
             }
-
+            _logger.LogTrace("資料庫更動失敗");
             return false;
         }
 
         public async Task<bool> Delete(int? id)
         {
+            _logger.LogTrace("取得待出貨列表內對應產品");
             var shipmentResult = await _context.OrderList.FindAsync(id);
             if(shipmentResult != null)
             {
@@ -128,6 +132,7 @@ namespace t02_ShopCMS.Services
 
         private string GenerateOrderNumber(string Category)
         {
+            _logger.LogTrace("生產訂單編號");
             string timestamp = DateTime.Now.ToString("yyyyMMddHHmm");
 
             Random random = new Random();

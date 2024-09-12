@@ -36,11 +36,11 @@ namespace t02_ShopCMS.Data
                     .HasComment("產品名稱");
 
                 entity.Property(e => e.Description)
-                    .HasMaxLength(255)
+                    .HasColumnType("nvarchar(max)")
                     .HasComment("產品說明");
 
                 entity.Property(e => e.Content)
-                    .HasMaxLength(255)
+                    .HasColumnType("nvarchar(max)")
                     .HasComment("產品內容");
 
                 entity.Property(e => e.Price)
