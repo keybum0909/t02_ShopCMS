@@ -26,7 +26,7 @@ namespace t02_ShopCMS.Services
             _logger = logger;
         }
 
-        public async Task<Indexresp> QueryInit()
+        public async Task<IndexViewModel> QueryInit()
         {
             _logger.LogTrace("取得產品與類別資料");
             var products = await _context.Product.ToListAsync();
@@ -48,7 +48,7 @@ namespace t02_ShopCMS.Services
                 }
             }
 
-            Indexresp result = new()
+            IndexViewModel result = new()
             {
                 Products = products,
                 Categories = categories,
@@ -58,22 +58,46 @@ namespace t02_ShopCMS.Services
             return result;
         }
 
-        public List<Product> SearchProduct(string searchString)
+        public async Task<IndexViewModel> SearchProduct(string searchString)
         {
             _logger.LogTrace("取得對應類別的產品");
-            IQueryable<Product> categoryProducts = _context.Product.Include(p => p.Category);
-
-            if (!string.IsNullOrEmpty(searchString))
+            var products = _context.Product.Where(x => searchString.Contains(x.Name)).Select(x => new Product
             {
-                categoryProducts = categoryProducts.Where(s => s.Name.Contains(searchString));
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                Image = x.Image,
+                CanOrder = x.CanOrder,
+                Category = new Category
+                {
+                    Name = x.Category.Name
+                }
+            }).ToList();
+
+            _logger.LogTrace("圖片轉Base64");
+            Dictionary<int, List<string>> imageArr = new();
+            foreach (var item in products)
+            {
+                if (products != null)
+                {
+                    if (item.Image != null)
+                    {
+                        var imageList = new List<string> { ViewImage(item.Image) };
+                        imageArr[item.Id] = imageList;
+                    }
+                }
             }
 
-            List<Product> searchResult = categoryProducts.ToList();
+            var result = new IndexViewModel
+            {
+                Products = products,
+                Imgsrc = imageArr
+            };
 
-            return searchResult;
+            return result;
         }
 
-        public async Task<Indexresp> CategoryFilter(int id)
+        public async Task<IndexViewModel> CategoryFilter(int id)
         {
             if(id == 0)
             {
@@ -105,7 +129,7 @@ namespace t02_ShopCMS.Services
                     }
                 }
 
-                var result = new Indexresp
+                var result = new IndexViewModel
                 {
                     Products = products,
                     Imgsrc = imageArr
@@ -143,7 +167,7 @@ namespace t02_ShopCMS.Services
                     }
                 }
 
-                var result = new Indexresp
+                var result = new IndexViewModel
                 {
                     Products = products,
                     Imgsrc = imageArr
@@ -208,14 +232,14 @@ namespace t02_ShopCMS.Services
         }
 
 
-        public async Task<Editresp> Edit(int? id)
+        public async Task<EditViewModel> Edit(int? id)
         {
             _logger.LogTrace("判斷產品是否於14天內增加");
             DateTime pastDays = DateTime.Now.AddDays(-14);
             bool canEdited = _context.Product.Where(p => p.Id == id)
                 .Any(p => p.CreateTime <= pastDays);
 
-            Editresp res = new();
+            EditViewModel res = new();
 
             if (canEdited)
             {
@@ -231,7 +255,7 @@ namespace t02_ShopCMS.Services
                     dvm.Imgsrc = ViewImage(product.Image);
                 }
 
-                res = new Editresp
+                res = new EditViewModel
                 {
                     Product = product,
                     Imgsrc = dvm.Imgsrc,

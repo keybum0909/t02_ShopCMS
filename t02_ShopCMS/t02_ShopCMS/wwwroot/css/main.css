@@ -68,7 +68,7 @@ h4 { color: #142E7C; font-weight: bold; margin: 20px 0; }
 /*button*/
 .add-btn { background-color: #14527C; color: #eee; margin-bottom: 5px; border: transparent; padding: 8px 30px; }
 
-.add-btn:hover, .add-btn:active { color: #fff; background-color: #14527C; opacity: 60%; border: transparent; padding: 8px 30px; }
+.add-btn:hover, .add-btn.active { color: #fff; background-color: #14527C; opacity: 60%; border: transparent; padding: 8px 30px; }
 
 .submit-btn { background-color: #004B9B; color: #fff; float: right; padding: 5px 30px; }
 
@@ -80,9 +80,9 @@ h4 { color: #142E7C; font-weight: bold; margin: 20px 0; }
 
 .delete-btn { padding: 5px 30px; float: right; }
 
-.plus-button { border: transparent; position: absolute; border-radius: 50%; right: 13px; bottom: 15px; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; background-color: #5955C4; color: #fff; }
+.plus-btn { border: transparent; position: absolute; border-radius: 50%; right: 13px; bottom: 15px; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; background-color: #5955C4; color: #fff; }
 
-.plus-button:hover, .plus-button:active { border:transparent; opacity:60%; background-color: #5955C4; }
+.plus-btn:hover, .plus-btn.active { border:transparent; opacity:60%; background-color: #5955C4; }
 
 .category-btn { background-color: #fff; color: #142E7C; border-radius: 10px; font-size: 20px; border: dashed 1px; padding: 10px 60px; }
 

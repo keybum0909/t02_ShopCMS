@@ -12,6 +12,7 @@ using t02_ShopCMS.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using t02_ShopCMS.Entity;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace t02_ShopCMS.Controllers
 {
@@ -34,14 +35,14 @@ namespace t02_ShopCMS.Controllers
         }
 
         [HttpPost]
-        public List<Product> SearchProduct(string searchString)
+        public async Task<IndexViewModel> SearchProduct(string searchString)
         {
-            var result = _productsService.SearchProduct(searchString);
+            var result = await _productsService.SearchProduct(searchString);
             return result;
         }
 
         [HttpPost]
-        public async Task<Indexresp> CategoryFilter(int id)
+        public async Task<IndexViewModel> CategoryFilter(int id)
         {
             var result = await _productsService.CategoryFilter(id);
             return result;
@@ -72,7 +73,14 @@ namespace t02_ShopCMS.Controllers
             if (ModelState.IsValid)
             {
                 var newProduct = await _productsService.Create(product, myImg);
-                return RedirectToAction(nameof(Index));
+                if (newProduct == true)
+                {
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    return Json(new { success = false });
+                }
             }
             ViewData["Categories"] = new SelectList(_context.Set<Category>(), "Id", "Name", product.CategoryId);
             return View(product);
@@ -98,19 +106,16 @@ namespace t02_ShopCMS.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _productsService.EditSave(dvm, myImg);
-                if(result == true)
+                if (result == true)
                 {
-                    return RedirectToAction(nameof(Index));
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    return Json(new { success = false });
                 }
             }
             return RedirectToAction(nameof(Edit));
-        }
-
-        // GET: Products/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            var result = await _productsService.Delete(id);
-            return View(result);
         }
 
         // POST: Products/Delete/5

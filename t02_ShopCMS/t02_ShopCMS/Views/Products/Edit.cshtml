@@ -1,4 +1,4 @@
-﻿@model Editresp
+﻿@model EditViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -8,14 +8,14 @@
 <div class="row">
     <div class="col-md-12 row form-container">
         <h4>編輯產品</h4>
-        <form asp-action="EditSave" enctype="multipart/form-data" class="form-row">
+        <form asp-action="EditSave" enctype="multipart/form-data" class="form-row" id="EditForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Product.Id" />
             @*類別*@
             <div class="form-group row mb-3">
                 <label asp-for="Product.CategoryId" class="col-md-1 control-label required">產品類型</label>
                 <div class="col-md-11">
-                    <select class="form-control" asp-for="Product.CategoryId" asp-items="Model.CategoryList"></select>
+                    <select class="form-control" asp-for="Product.CategoryId" asp-items="Model.CategoryList" name="Product.CategoryId"></select>
                     <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
                 </div>
             </div>
@@ -23,7 +23,7 @@
             <div class="form-group row mb-3">
                 <label asp-for="Product.Name" class="col-md-1 control-label required">產品名稱</label>
                 <div class="col-md-11">
-                    <input asp-for="Product.Name" class="form-control" />
+                    <input asp-for="Product.Name" class="form-control" name="Product.Name" />
                     <span asp-validation-for="Product.Name" class="text-danger"></span>
                 </div>
             </div>
@@ -31,7 +31,7 @@
             <div class="form-group row mb-3">
                 <label asp-for="Product.Description" class="col-md-1 col-form-label">產品簡介</label>
                 <div class="col-md-11">
-                    <textarea asp-for="Product.Description" class="form-control"></textarea>
+                    <textarea asp-for="Product.Description" class="form-control" name="Product.Description"></textarea>
                 </div>
             </div>
             @*圖片*@
@@ -50,7 +50,7 @@
             <div class="form-group row mb-3">
                 <label asp-for="Product.Price" class="col-md-1 col-form-label required">產品價格</label>
                 <div class="col-md-11">
-                    <input asp-for="Product.Price" class="form-control" />
+                    <input asp-for="Product.Price" class="form-control" name="Product.Price" />
                     <span asp-validation-for="Product.Price" class="text-danger"></span>
                 </div>
             </div>
@@ -58,7 +58,7 @@
             <div class="form-group row mb-3">
                 <label asp-for="Product.Stock" class="col-md-1 control-label required">產品庫存</label>
                 <div class="col-md-11">
-                    <input asp-for="Product.Stock" class="form-control" />
+                    <input asp-for="Product.Stock" class="form-control" name="Product.Stock" />
                     <span asp-validation-for="Product.Stock" class="text-danger"></span>
                 </div>
             </div>
@@ -76,7 +76,7 @@
             <div class="form-group row mb-3">
                 <label asp-for="Product.Content" class="col-md-1 col-form-label">產品內容</label>
                 <div class="col-md-11">
-                    <textarea asp-for="Product.Content" class="form-control"></textarea>
+                    <textarea asp-for="Product.Content" class="form-control" name="Product.Content"></textarea>
                 </div>
             </div>
             
@@ -97,6 +97,44 @@
             const fileName = inputImg.files[0] ? inputImg.files[0].name : '選擇圖片';
             label.textContent = fileName;
         })
+
+        $('#EditForm').on('submit', function (event) {
+            event.preventDefault();
+            const form = document.getElementById('EditForm');
+            const formData = new FormData(form);
+
+            fetch('/Products/EditSave', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        swal.fire({
+                            title: '產品修改成功',
+                            icon: 'success',
+                            confirmButtonText: '確認',
+                            closeModal: false,
+                            allowOutsideClick: false,
+                            closeOnConfirm: false,
+                            closeOnCancel: false,
+                        }).then((result) => {
+                            window.location.href = '/';
+                        });
+                    } else {
+                        swal.fire({
+                            title: "Error occurred while creating your product.",
+                            icon: "error",
+                        });
+                    }
+                })
+                .catch(error => {
+                    swal.fire({
+                        title: "Error occurred: " + error.message,
+                        icon: "error",
+                    });
+                });
+        });
     </script>
     
     <script src="~/lib/ckeditor5/build/ckeditor.js"></script>

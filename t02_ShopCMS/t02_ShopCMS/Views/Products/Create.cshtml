@@ -8,13 +8,13 @@
 <div class="row">
     <div class="col-md-12 row form-container">
         <h4>新增產品</h4>
-        <form asp-action="Create" enctype="multipart/form-data" class="form-row">
+        <form asp-action="Create" enctype="multipart/form-data" class="form-row" id="createForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @*類別*@
             <div class="form-group row mb-3">
                 <label asp-for="CategoryId" class="col-md-1 control-label required">產品類型</label>
                 <div class="col-md-11">
-                    <select class="form-control" asp-for="CategoryId" asp-items="ViewBag.Categories"></select>
+                    <select class="form-control" asp-for="CategoryId" asp-items="ViewBag.Categories" name="CategoryId"></select>
                     <span asp-validation-for="CategoryId" class="text-danger"></span>
                 </div>
             </div>
@@ -22,7 +22,7 @@
             <div class="form-group row mb-3">
                 <label asp-for="Name" class="col-md-1 control-label required">產品名稱</label>
                 <div class="col-md-11">
-                    <input asp-for="Name" class="form-control" />
+                    <input asp-for="Name" class="form-control" name="Name" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
             </div>
@@ -30,13 +30,12 @@
             <div class="form-group row mb-3">
                 <label asp-for="Description" class="col-md-1 col-form-label">產品簡介</label>
                 <div class="col-md-11">
-                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <textarea asp-for="Description" class="form-control" name="Description"></textarea>
                 </div>
             </div>
             @*圖片*@
             <div class="form-group row mb-3">
-                @*
-                <img id="preview" class="img-fluid mx-auto d-block" style="height:200px;"/> *@
+                @*<img id="preview" class="img-fluid mx-auto d-block" style="height:200px;"/> *@
                 <label asp-for="Image" for="inputImg" class="col-md-1 control-label required">產品圖片</label>
                 <div class="col-md-11 custom-file">
                     <label class="custom-file-label w-100" id="customFileLabel" for="inputImg">選擇圖片</label>
@@ -48,7 +47,7 @@
             <div class="form-group row mb-3">
                 <label asp-for="Price" class="col-md-1 col-form-label required">產品價格</label>
                 <div class="col-md-11">
-                    <input asp-for="Price" class="form-control" />
+                    <input asp-for="Price" class="form-control" name="Price" />
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
             </div>
@@ -56,7 +55,7 @@
             <div class="form-group row mb-3">
                 <label asp-for="Stock" class="col-md-1 control-label required">產品庫存</label>
                 <div class="col-md-11">
-                    <input asp-for="Stock" class="form-control" />
+                    <input asp-for="Stock" class="form-control" name="Stock" />
                     <span asp-validation-for="Stock" class="text-danger"></span>
                 </div>
             </div>
@@ -74,7 +73,7 @@
             <div class="form-group row mb-3">
                 <label asp-for="Content" class="col-md-1 col-form-label">產品內容</label>
                 <div class="col-md-11">
-                    <textarea asp-for="Content" class="form-control"></textarea>
+                    <textarea asp-for="Content" class="form-control" name="Content"></textarea>
                 </div>
             </div>
             
@@ -94,6 +93,44 @@
         const fileName = inputImg.files[0] ? inputImg.files[0].name : '選擇圖片';
         label.textContent = fileName;
     })
+
+    $('#createForm').on('submit', function (event) {
+        event.preventDefault();
+        const form = document.getElementById('createForm');
+        const formData = new FormData(form);
+
+        fetch('/Products/Create', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    swal.fire({
+                        title: '產品新增成功',
+                        icon: 'success',
+                        confirmButtonText: '確認',
+                        closeModal: false,
+                        allowOutsideClick: false,
+                        closeOnConfirm: false,
+                        closeOnCancel: false,
+                    }).then((result) => {
+                        window.location.href = '/';
+                    });
+                } else {
+                    swal.fire({
+                        title: "Error occurred while creating your product.",
+                        icon: "error",
+                    });
+                }
+            })
+            .catch(error => {
+                swal.fire({
+                    title: "Error occurred: " + error.message,
+                    icon: "error",
+                });
+            });
+    });
     </script>
 
 }

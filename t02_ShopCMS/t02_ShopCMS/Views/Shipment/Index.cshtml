@@ -97,6 +97,33 @@
     });
 
     $('.delete-btn').on('click', function () {
+        e.preventDefault();
+
+        const id = $(this).attr('data-id');
+
+        swal.fire({
+            title: '您的產品即將被刪除',
+            text: '產品刪除後將無法復原，請問您是否要刪除產品?',
+            icon: 'warning',
+            confirmButtonText: '確定',
+            cancelButtonText: '取消',
+            showCancelButton: true,
+            closeModal: false,
+            allowOutsideClick: false,
+            closeOnConfirm: false,
+            closeOnCancel: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteData(id);
+            } else {
+                swal.fire({ title: "產品已被取消刪除" });
+            }
+        });
+
+        
+    })
+
+    function deleteData(id) {
         const id = $(this).attr('data-id');
 
         fetch(`/Shipment/Delete?id=${id}`, {
@@ -106,15 +133,25 @@
             },
         })
             .then(response => response.json())
-            .then(result => {
-                console.log('成功:', result);
-                location.reload();
-
+            .then(data => {
+                if (data.success) {
+                    swal.fire({
+                        title: "您的產品已被刪除",
+                        icon: "success",
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    swal.fire({
+                        title: "Error occurred while deleting your product.",
+                        icon: "error",
+                    });
+                }
             })
             .catch(error => {
                 console.error('錯誤:', error);
             });
-    })
+    }
 
     $('.order-checkbox').on('click', function () {
         const productName = $(this).attr('data-product-name');

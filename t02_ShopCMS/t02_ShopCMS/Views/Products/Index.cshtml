@@ -1,4 +1,4 @@
-﻿@model Indexresp
+﻿@model IndexViewModel
 @{
     ViewData["Title"] = "Index";
 }
@@ -21,12 +21,12 @@
                     <input type="submit" value="+ 新增類別" class="add-btn btn" />
                 </a>
             </div>
-            @* <form class="col-4 mb-2">
+            <form class="col-4 mb-2">
                 <div class="input-group input-group-sm">
                     <input class="form-control" type="text" placeholder="Name" name="searchString" />
                     <input class="btn btn-sm btn-primary search-btn" type="submit" value="Search" />
                 </div>
-            </form> *@
+            </form>
         </div>
     </div>
     <div class="container p-3 ms-3">
@@ -102,11 +102,10 @@
                             <h3 class="title-name mt-3">${product.name}</h3>
                             <div class="product-description pe-5">${product.description}</div>
                             <div class="product-item mt-3">
-                                <a href="Products/Edit?id=${product.id}" data-id="${product.id}" class="product-action">Edit</a> |
-                                <a href="Products/Delete?id=${product.id}" data-id="${product.id}" class="product-action">Delete</a> |
-                                <a href="Products/Details?id=${product.id}" data-id="${product.id}" class="product-action">Details</a>
+                                <a href="Products/Edit?id=${product.id}" data-id="${product.id}" class="product-action">修改產品</a> |
+                                <a href="Products/Details?id=${product.id}" data-id="${product.id}" class="product-action">產品資訊</a>
                             </div>
-                            <button class="btn btn-primary plus-button">+</button>
+                            <button class="btn btn-primary plus-btn">+</button>
                         </div>
                     `);
                 } else {
@@ -118,9 +117,8 @@
                             <h3 class="title-name mt-3">${product.name}</h3>
                             <div class="product-description pe-5">${product.description}</div>
                             <div class="product-item mt-3">
-                                <a href="Products/Edit?id=${product.id}" data-id="${product.id}" class="product-action">Edit</a> |
-                                <a href="Products/Delete?id=${product.id}" data-id="${product.id}" class="product-action">Delete</a> |
-                                <a href="Products/Details?id=${product.id}" data-id="${product.id}" class="product-action">Details</a>
+                                <a href="Products/Edit?id=${product.id}" data-id="${product.id}" class="product-action">修改產品</a> |
+                                <a href="Products/Details?id=${product.id}" data-id="${product.id}" class="product-action">產品資訊</a>
                             </div>
                         </div>
                     `);
@@ -146,61 +144,17 @@
     //             'Content-Type': 'application/json'
     //         },
     //     })
-    //     .then(response => {
-    //         if (!response.ok) {
-    //             throw new Error('网络响应失败：' + response.status);
-    //         }
-    //         return response.text();
-    //     })
-    //     .then(text => {
-    //         $('.product-area').empty();
-    //         const result = JSON.parse(text);
-            
-    //         console.log('成功:', result);
-    //         result.forEach(product => {
-    //             if (product.canOrder) {
-    //                 $('.product-area').append(`
-
-    //                     <div class="col-md-4 product-card">
-    //                         <img class="mb-3" id="${product.id}" />
-    //                         <div class="col-md-12 category-name d-inline">${name}</div>
-    //                         <h5 class=" mt-3">${product.name}</h5>
-    //                         <div class="product-description pe-5">${product.description}</div>
-    //                         <div class="product-item mt-3">
-    //                             <a asp-action="Edit" asp-route-id="id="${product.id}"">Edit</a> |
-    //                             <a asp-action="Delete" asp-route-id="id="${product.id}"">Delete</a> |
-    //                             <a asp-action="Details" asp-route-id="id="${product.id}">Details</a>
-    //                         </div>
-    //                         <button class="btn btn-primary plus-button">+</button>
-    //                     </div>
-    //                 `);
-    //             }
-    //             else {
-    //                 $('.product-area').append(`
-    //                     <div class="col-md-4 product-card">
-    //                         <span class="product-label sold-out">已下架</span>
-    //                         <img class="mb-3" id="id="${product.id}"" />
-    //                         <div class="col-md-12 category-name d-inline">${name}</div>
-    //                         <h5 class=" mt-3">${product.name}</h5>
-    //                         <div class="product-description pe-5">${product.description}</div>
-    //                         <div class="product-item mt-3">
-    //                             <a asp-action="Edit" asp-route-id="id="${product.id}"">Edit</a> |
-    //                             <a asp-action="Delete" asp-route-id="id="${product.id}"">Delete</a> |
-    //                             <a asp-action="Details" asp-route-id="id="${product.id}"">Details</a>
-    //                         </div>
-    //                     </div>
-    //                 `);
-    //             }
+    //         .then(response => response.json())
+    //         .then(result => {
+    //             console.log('成功:', result);
+    //         })
+    //         .catch(error => {
+    //             console.error('錯誤:', error);
     //         });
-
-    //     })
-    //     .catch(error => {
-    //         console.error('錯誤:', error);
-    //     });
     // });
 
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.plus-button').forEach(button => {
+    $('.plus-btn').on('click', function (event) {
+        document.querySelectorAll('.plus-btn').forEach(button => {
             button.addEventListener('click', function (event) {
                 event.preventDefault();
 

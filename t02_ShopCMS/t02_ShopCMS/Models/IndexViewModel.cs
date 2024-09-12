@@ -3,7 +3,7 @@ using t02_ShopCMS.Entity;
 
 namespace t02_ShopCMS.Models
 {
-    public class Indexresp
+    public class IndexViewModel
     {
         public List<Product> Products { get; set; }
         public List<Category> Categories { get; set; }
