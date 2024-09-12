@@ -9,7 +9,6 @@
     <div class="col-md-12 row form-container">
         <h4>新增產品</h4>
         <form asp-action="Create" enctype="multipart/form-data" class="form-row">
-            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @*類別*@
             <div class="form-group row mb-3">
@@ -62,12 +61,12 @@
                 </div>
             </div>
             @* 是否上架 *@
-            <div class="form-check form-switch row mb-3 d-flex align-items-center">
-                <div class="col-md-1">
+            <div class="form-check form-switch row mb-3 d-flex align-items-center p-0">
+                <div class="col-md-1 d-flex justify-content-left">
                     <label class="form-check-label required" for="flexSwitchCheckChecked">是否上架</label>
                 </div>
                 <div class="col-md-11">
-                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" name="CanOrder" value="true" @(Model?.CanOrder == true ? "checked" : "")>
+                    <input class="form-check-input m-0" type="checkbox" role="switch" id="flexSwitchCheckChecked" name="CanOrder" value="true" @(Model?.CanOrder == true ? "checked" : "")>
                     <span asp-validation-for="CanOrder" class="text-danger"></span>
                 </div>
             </div>

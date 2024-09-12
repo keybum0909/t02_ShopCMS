@@ -35,7 +35,7 @@
                 </div>
             </div>
             @*圖片*@
-            <div class="form-group row mb-3">
+            <div class="form-group row mb-2">
                 <label asp-for="Product.Image" for="inputImg" class="col-md-1 control-label">產品圖片</label>
                 <div class="col-md-11 custom-file">
                     <label class="custom-file-label w-100" id="customFileLabel" for="inputImg">選擇圖片</label>
@@ -43,8 +43,8 @@
                     <span asp-validation-for="Product.Image" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-4 mb-3">
-                <img id="preview" class="img-fluid mx-auto d-block" style="height:200px;" src="@Html.DisplayFor(model => model.Imgsrc)" />
+            <div class="col-4 mb-3 mt-0">
+                <img id="preview" class="img-fluid mx-auto d-block" src="@Html.DisplayFor(model => model.Imgsrc)" />
             </div>
             @*價格*@
             <div class="form-group row mb-3">
@@ -63,12 +63,12 @@
                 </div>
             </div>
             @* 是否上架 *@
-            <div class="form-check form-switch row mb-3 d-flex align-items-center">
-                <div class="col-md-1">
+            <div class="form-check form-switch row mb-3 d-flex align-items-center p-0">
+                <div class="col-md-1 d-flex justify-content-left">
                     <label class="form-check-label required" for="flexSwitchCheckChecked">是否上架</label>
                 </div>
                 <div class="col-md-11">
-                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" name="Product.CanOrder" value="true" @(Model.Product.CanOrder ? "checked" : "")>
+                    <input class="form-check-input m-0" type="checkbox" role="switch" id="flexSwitchCheckChecked" name="Product.CanOrder" value="true" @(Model.Product.CanOrder ? "checked" : "")>
                     <span asp-validation-for="Product.CanOrder" class="text-danger"></span>
                 </div>
             </div>

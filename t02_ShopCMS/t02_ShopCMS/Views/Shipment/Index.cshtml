@@ -1,4 +1,4 @@
-﻿@model IEnumerable<t02_ShopCMS.Entity.OrderList>
+﻿@model ShipmentViewModel
 @{
     ViewData["Title"] = "Shipment";
 }
@@ -7,30 +7,33 @@
     <h4>待出貨清單</h4>
     <div class="form-container row d-flex justify-content-center align-items-center">
         <div class="shipment-list row p-0 mt-3">
-            @foreach (var item in Model)
+            @foreach (var item in Model.Orders)
             {
-                <div class="mb-4 d-flex justify-content-center align-items-center">
-                    <div class="form-check col-md-1 d-flex align-items-center">
+                <div class="mb-4 d-flex justify-content-center align-items-center p-0">
+                    <div class="form-check col-md-1 d-flex justify-content-center align-items-center p-0">
                         <input class="form-check-input order-checkbox" type="checkbox" value="" id="flexCheckDefault" data-id="@item.Id" data-product-name="@item.ProductName" data-amount="@item.Amount">
                         <label class="form-check-label" for="flexCheckDefault"></label>
                     </div>
                     <div class="row shipment-item col-md-11 d-flex align-items-center" data-product-name="@item.ProductName" data-category="@item.Category">
-                        <img class="col-md-3" />
-                        <div class="col-md-5 title-name">
+                        @foreach (var img in Model.Imgsrc[item.ProductId])
+                        {
+                            <img class="col-md-3" src="@img" />
+                        }
+                        <div class="col-md-5 title-name p-0 ms-2">
                             <div class="category-item d-inline" data-category="@item.Category">
                                 @item.Category
                             </div>
-                            <div class="mt-2" data-product-name="@item.ProductName" style="color: #14527C; font-weight: bold;">
+                            <div class="mt-2 product-name" data-product-name="@item.ProductName">
                                 @item.ProductName
                             </div>
                         </div>
-                        <div class="col-md-3 quantity-control me-5">
+                        <div class="col-md-3 quantity-control p-0">
                             <input type='button' value='-' class='qtyminus qty-btn d-flex justify-content-center align-items-center' field='quantity' />
                             <input type='text' value='@item.Amount' class='qty text-center' name='quantity' data-amount="@item.Amount" data-id="@item.Id" readonly />
                             <input type='button' value='+' class='qtyplus qty-btn d-flex justify-content-center align-items-center' field='quantity' />
                         </div>
-                        <div class="col-md-1 form-group ms-4">
-                            <input type="submit" value="刪除" class="delete-btn btn-danger btn" data-id="@item.Id" />
+                        <div class="col-md-1 form-group ms-5 d-flex justify-content-right">
+                            <input type="submit" value="刪除" class="delete-btn btn-danger btn" data-id="@item.Id" style="padding: 3px 25px; font-size: 15px;" />
                         </div>
                     </div>
                 </div>

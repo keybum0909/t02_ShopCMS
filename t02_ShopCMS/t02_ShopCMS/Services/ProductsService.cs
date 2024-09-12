@@ -73,12 +73,84 @@ namespace t02_ShopCMS.Services
             return searchResult;
         }
 
-        public async Task<List<Product>> CategoryFilter(int id)
+        public async Task<Indexresp> CategoryFilter(int id)
         {
-            _logger.LogTrace("取得對應類別的商品");
-            var result = await _context.Product.Where(x => x.CategoryId == id).ToListAsync();
-            return result;
-            
+            if(id == 0)
+            {
+                _logger.LogTrace("取得全部的產品");
+                var products = await _context.Product.Select(x => new Product
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    Image = x.Image,
+                    CanOrder = x.CanOrder,
+                    Category = new Category
+                    {
+                        Name = x.Category.Name
+                    }
+                }).ToListAsync();
+
+                _logger.LogTrace("圖片轉Base64");
+                Dictionary<int, List<string>> imageArr = new();
+                foreach (var item in products)
+                {
+                    if (products != null)
+                    {
+                        if (item.Image != null)
+                        {
+                            var imageList = new List<string> { ViewImage(item.Image) };
+                            imageArr[item.Id] = imageList;
+                        }
+                    }
+                }
+
+                var result = new Indexresp
+                {
+                    Products = products,
+                    Imgsrc = imageArr
+                };
+
+                return result;
+            }
+            else
+            {
+                _logger.LogTrace("取得對應類別的商品");
+                var products = await _context.Product.Where(x => x.CategoryId == id).Select(x => new Product
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    Image = x.Image,
+                    CanOrder = x.CanOrder,
+                    Category = new Category
+                    {
+                        Name = x.Category.Name
+                    }
+                }).ToListAsync();
+
+                _logger.LogTrace("圖片轉Base64");
+                Dictionary<int, List<string>> imageArr = new();
+                foreach (var item in products)
+                {
+                    if (products != null)
+                    {
+                        if (item.Image != null)
+                        {
+                            var imageList = new List<string> { ViewImage(item.Image) };
+                            imageArr[item.Id] = imageList;
+                        }
+                    }
+                }
+
+                var result = new Indexresp
+                {
+                    Products = products,
+                    Imgsrc = imageArr
+                };
+
+                return result;
+            }
         }
 
         public async Task<DetailViewModel> Details(int? id)

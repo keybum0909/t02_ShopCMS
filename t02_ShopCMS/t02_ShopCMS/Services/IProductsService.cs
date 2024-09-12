@@ -11,7 +11,7 @@ namespace t02_ShopCMS.Services
     {
         Task<Indexresp> QueryInit();
         List<Product> SearchProduct(string searchString);
-        Task<List<Product>> CategoryFilter(int id);
+        Task<Indexresp> CategoryFilter(int id);
         Task<DetailViewModel> Details(int? id);
         Task<bool> Create(Product product, IFormFile myImg);
 

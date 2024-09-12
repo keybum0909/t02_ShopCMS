@@ -9,7 +9,7 @@ namespace t02_ShopCMS.Services
 {
     public interface IShipmentService
     {
-        List<OrderList> QueryInit();
+        ShipmentViewModel QueryInit();
         Task<List<OrderList>> SaveOrder([FromBody] SaveDatareq req);
         Task<bool> Order([FromBody] List<Orderreq> req);
         Task<bool> Delete(int? id);

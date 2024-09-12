@@ -41,7 +41,7 @@ namespace t02_ShopCMS.Controllers
         }
 
         [HttpPost]
-        public async Task<List<Product>> CategoryFilter(int id)
+        public async Task<Indexresp> CategoryFilter(int id)
         {
             var result = await _productsService.CategoryFilter(id);
             return result;
@@ -66,7 +66,6 @@ namespace t02_ShopCMS.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Product product, IFormFile myImg)
         {
             //IFormFile name對應input type=file的name屬性)
