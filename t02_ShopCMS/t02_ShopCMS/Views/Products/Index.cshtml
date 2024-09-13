@@ -21,12 +21,12 @@
                     <input type="submit" value="+ 新增類別" class="add-btn btn" />
                 </a>
             </div>
-            <form class="col-4 mb-2">
+            @* <form class="col-4 mb-2">
                 <div class="input-group input-group-sm">
                     <input class="form-control" type="text" placeholder="Name" name="searchString" />
                     <input class="btn btn-sm btn-primary search-btn" type="submit" value="Search" />
                 </div>
-            </form>
+            </form> *@
         </div>
     </div>
     <div class="container p-3 ms-3">
@@ -105,7 +105,7 @@
                                 <a href="Products/Edit?id=${product.id}" data-id="${product.id}" class="product-action">修改產品</a> |
                                 <a href="Products/Details?id=${product.id}" data-id="${product.id}" class="product-action">產品資訊</a>
                             </div>
-                            <button class="btn btn-primary plus-btn">+</button>
+                            <button class="btn plus-btn">+</button>
                         </div>
                     `);
                 } else {
@@ -132,8 +132,6 @@
         }   
         
     }
-
-
     // $('.search-btn').on('click', function () {
             
     //     var searchStringValue = document.querySelector('input[name="searchString"]').value;
@@ -153,41 +151,38 @@
     //         });
     // });
 
-    $('.plus-btn').on('click', function (event) {
-        document.querySelectorAll('.plus-btn').forEach(button => {
-            button.addEventListener('click', function (event) {
-                event.preventDefault();
+    $('.product-area').on('click', '.plus-btn', function (event) {
 
-                const productDiv = this.closest('.product-card');
+        event.preventDefault();
+        const productId = $(this).siblings('img').data('id');
 
-                const productName = productDiv.getAttribute('data-name');
-                const productCategory = productDiv.getAttribute('data-category-name');
+        const productCard = $(this).closest('.product-card');
 
-                const amount = 1;
+        const productName = productCard.find('.title-name').text();
+        const productCategory = productCard.find('.category-name').text();
+        const amount = 1;
 
-                fetch('/Shipment/SaveOrder', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ "ProductName": productName, "Amount": amount, "Category": productCategory })
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok ' + response.statusText);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            window.location.href = "/Shipment/Index";
-                        } else {
-                            alert('加入購物車發生錯誤');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-            });
-        });
+        fetch('/Shipment/SaveOrder', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ "ProductName": productName, "Amount": amount, "Category": productCategory })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    window.location.href = "/Shipment/Index";
+                } else {
+                    alert('加入購物車發生錯誤');
+                }
+            })
+            .catch(error => console.error('Error:', error));
     });
 
     $(document).ready(function () {
