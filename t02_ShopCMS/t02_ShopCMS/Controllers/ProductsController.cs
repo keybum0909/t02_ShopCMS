@@ -86,14 +86,16 @@ namespace t02_ShopCMS.Controllers
             return View(product);
         }
 
+        public IActionResult CheckDate(int? id)
+        {
+            bool result = _productsService.CheckDate(id);
+            return Json(result);
+        }
+
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             var result = await _productsService.Edit(id);
-            if (result.Product == null)
-            { 
-                return RedirectToAction("Index", new { Id = id, error = "true" });
-            }
             return View(result);
         }
 
