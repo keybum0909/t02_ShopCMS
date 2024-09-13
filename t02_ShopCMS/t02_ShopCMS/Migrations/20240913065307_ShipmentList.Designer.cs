@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using t02_ShopCMS.Data;
 
@@ -11,9 +12,11 @@ using t02_ShopCMS.Data;
 namespace t02_ShopCMS.Migrations
 {
     [DbContext(typeof(t02_ShopCMSContext))]
-    partial class t02_ShopCMSContextModelSnapshot : ModelSnapshot
+    [Migration("20240913065307_ShipmentList")]
+    partial class ShipmentList
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

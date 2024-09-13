@@ -142,6 +142,10 @@ namespace t02_ShopCMS.Data
                     .IsRequired()
                     .HasComment("出貨產品數量");
 
+                entity.Property(e => e.TotalPrice)
+                    .IsRequired()
+                    .HasComment("總金額");
+
                 entity.Property(e => e.OrderTime)
                     .IsRequired()
                     .HasConversion<DateTime>()
