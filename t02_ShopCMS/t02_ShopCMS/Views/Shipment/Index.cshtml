@@ -96,7 +96,7 @@
         }
     });
 
-    $('.delete-btn').on('click', function () {
+    $('.delete-btn').on('click', function (e) {
         e.preventDefault();
 
         const id = $(this).attr('data-id');
@@ -124,7 +124,6 @@
     })
 
     function deleteData(id) {
-        const id = $(this).attr('data-id');
 
         fetch(`/Shipment/Delete?id=${id}`, {
             method: 'POST',
