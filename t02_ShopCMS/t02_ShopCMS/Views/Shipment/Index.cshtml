@@ -48,6 +48,7 @@
 @section Scripts {
 <script>
     const saveArray = [];
+    var currentVal;
 
     $(function () {
         $('.qtyplus, .qtyminus').click(function (e) {
@@ -55,7 +56,7 @@
             var $this = $(this);
             var fieldName = $this.attr('field');
             var $input = $this.siblings('input[name=' + fieldName + ']');
-            var currentVal = parseInt($input.val());
+            currentVal = parseInt($input.val());
 
             if ($this.hasClass('qtyplus')) {
                 $input.val(!isNaN(currentVal) ? currentVal + 1 : 0);
@@ -89,7 +90,23 @@
             })
             .then(data => {
                 if (data.success) {
+                    console.log('成功', data)
                 } else {
+                    swal.fire({
+                        title: '已超出庫存書量',
+                        text: '點選數量已超出庫存書量，請先確認庫存',
+                        icon: 'warning',
+                        confirmButtonText: '確定',
+                        closeModal: false,
+                        allowOutsideClick: false,
+                        closeOnConfirm: false,
+                        closeOnCancel: false,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            //currentVal = currentVal-1;
+                            location.reload();
+                        }
+                    });
                 }
             })
             .catch(error => console.error('Error:', error));

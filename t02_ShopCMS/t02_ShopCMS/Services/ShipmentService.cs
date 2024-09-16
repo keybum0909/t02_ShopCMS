@@ -59,46 +59,54 @@ namespace t02_ShopCMS.Services
             return queryInitData;
         }
 
-        public async Task<List<OrderList>> SaveOrder([FromBody] SaveDatareq req)
+        public async Task<bool> SaveOrder([FromBody] SaveDatareq req)
         {
-            _logger.LogTrace("確認產品是否已於待出貨清單內");
-            bool ReadyInDatabase = _context.OrderList.Any(x => x.ProductName == req.ProductName);
-            var orderProoductId = _context.Product.Where(x => x.Name == req.ProductName).Select(x => x.Id).FirstOrDefault();
-            if (!ReadyInDatabase)
+            var productStock = _context.Product.Where(x => x.Name == req.ProductName).Select(x => x.Stock).FirstOrDefault();
+            if (productStock < req.Amount)
             {
-                var shipment = new OrderList
-                {
-                    ProductId = orderProoductId,
-                    ProductName = req.ProductName,
-                    Amount = req.Amount,
-                    Category = req.Category,
-                    CreateTime = DateTime.Now
-                };
-
-                _logger.LogTrace("新增產品於資料表OrderList");
-                _context.OrderList.Add(shipment);
+                return false;
             }
             else
             {
-                var newData = _context.OrderList.Where(x => x.ProductName == req.ProductName).ToList();
-                foreach (var item in newData)
+                _logger.LogTrace("確認產品是否已於待出貨清單內");
+                bool ReadyInDatabase = _context.OrderList.Any(x => x.ProductName == req.ProductName);
+                var orderProoductId = _context.Product.Where(x => x.Name == req.ProductName).Select(x => x.Id).FirstOrDefault();
+                if (!ReadyInDatabase)
                 {
+                    var shipment = new OrderList
+                    {
+                        ProductId = orderProoductId,
+                        ProductName = req.ProductName,
+                        Amount = req.Amount,
+                        Category = req.Category,
+                        CreateTime = DateTime.Now
+                    };
+
                     _logger.LogTrace("新增產品於資料表OrderList");
-                    item.Amount += req.Amount;
+                    _context.OrderList.Add(shipment);
                 }
-            }
+                else
+                {
+                    var newData = _context.OrderList.Where(x => x.ProductName == req.ProductName).ToList();
+                    foreach (var item in newData)
+                    {
+                        _logger.LogTrace("新增產品於資料表OrderList");
+                        item.Amount += req.Amount;
+                    }
+                }
 
-            try
-            {
-                _logger.LogTrace("資料表更新");
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _logger.LogTrace("資料表更新");
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "資料表更新失敗");
+                }
+                await _context.OrderList.ToListAsync();
+                return true;
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "資料表更新失敗");
-            }
-            return await _context.OrderList.ToListAsync();
-
         }
 
         public async Task<bool> Order([FromBody] List<Orderreq> req)
@@ -130,13 +138,15 @@ namespace t02_ShopCMS.Services
                         _context.OrderList.Remove(orderItem);
                     }
 
-                    _logger.LogTrace("資料庫更動");
-                    await _context.SaveChangesAsync();
-                    return true;
                 }
+
+                _logger.LogTrace("資料庫更動");
+                await _context.SaveChangesAsync();
             }
-            _logger.LogTrace("資料庫更動失敗");
-            return false;
+
+            return true;
+            //_logger.LogTrace("資料庫更動失敗");
+            //return false;
         }
 
         public async Task<bool> Delete(int? id)
