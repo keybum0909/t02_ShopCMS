@@ -100,9 +100,9 @@
                             <img class="mb-3" data-id="${product.id}" id="product-img-${product.id}" />
                             <div class="col-md-12 category-name d-inline">${product.category.name}</div>
                             <h3 class="title-name mt-3">${product.name}</h3>
-                            <div class="product-description pe-5">${product.description}</div>
+                            <div class="product-description pe-5">${product.description ? product.description : "無"}</div>
                             <div class="product-item mt-3">
-                                <a href="Products/Edit?id=${product.id}" data-id="${product.id}" class="product-action">修改產品</a> |
+                                <a href="javascript:CheckDate(${product.id})" data-id="${product.id} class="product-action edit-product">修改產品</a> |
                                 <a href="Products/Details?id=${product.id}" data-id="${product.id}" class="product-action">產品資訊</a>
                             </div>
                             <button class="btn plus-btn">+</button>
@@ -115,9 +115,9 @@
                             <img class="mb-3" data-id="${product.id}" id="product-img-${product.id}" />
                             <div class="col-md-12 category-name d-inline">${product.category.name}</div>
                             <h3 class="title-name mt-3">${product.name}</h3>
-                            <div class="product-description pe-5">${product.description}</div>
+                            <div class="product-description pe-5">${product.description ? product.description : "無"}</div>
                             <div class="product-item mt-3">
-                                <a href="Products/Edit?id=${product.id}" data-id="${product.id}" class="product-action">修改產品</a> |
+                                <a href="javascript:CheckDate(${product.id})" data-id="${product.id} class="product-action edit-product">修改產品</a> |
                                 <a href="Products/Details?id=${product.id}" data-id="${product.id}" class="product-action">產品資訊</a>
                             </div>
                         </div>
@@ -184,16 +184,30 @@
             })
             .catch(error => console.error('Error:', error));
     });
-
-    $(document).ready(function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('error') && urlParams.get('error') === 'true') {
-            swal.fire({
-                    title: "此產品於兩周內上架，不可編輯",
-                icon: "error"
-            });
-        }
-    });
     
+    function CheckDate(id) {
+
+        fetch(`/Products/CheckDate?id=${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result) {
+                    window.location.href = `/Products/Edit?id=${id}`
+                }else{
+                    swal.fire({
+                        title: "此產品於兩周內上架，不可編輯",
+                        icon: "error"
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('錯誤:', error);
+            });
+    }
+        
 </script>
 }

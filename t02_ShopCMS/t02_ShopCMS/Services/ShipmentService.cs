@@ -115,7 +115,8 @@ namespace t02_ShopCMS.Services
                         ProductName = item.ProductName,
                         ShipNumber = GenerateOrderNumber(product.CategoryId.ToString()),
                         Amount = item.Amount,
-                        OrderTime = DateTime.Now
+                        OrderTime = DateTime.Now,
+                        TotalPrice = item.Amount * product.Price
                     };
 
                     _logger.LogTrace("出貨後產生出貨清單");

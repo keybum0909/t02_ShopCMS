@@ -231,42 +231,51 @@ namespace t02_ShopCMS.Services
             }
         }
 
-
-        public async Task<EditViewModel> Edit(int? id)
+        public bool CheckDate(int? id)
         {
             _logger.LogTrace("判斷產品是否於14天內增加");
             DateTime pastDays = DateTime.Now.AddDays(-14);
             bool canEdited = _context.Product.Where(p => p.Id == id)
                 .Any(p => p.CreateTime <= pastDays);
 
-            EditViewModel res = new();
-
             if (canEdited)
             {
-                _logger.LogTrace("取得對應產品");
-                var product = await _context.Product
-                                .Include(p => p.Category)
-                                .FirstOrDefaultAsync(m => m.Id == id);
-
-                DetailViewModel dvm = new();
-                dvm.Product = product;
-                if (product != null)
-                {
-                    dvm.Imgsrc = ViewImage(product.Image);
-                }
-
-                res = new EditViewModel
-                {
-                    Product = product,
-                    Imgsrc = dvm.Imgsrc,
-                    CategoryList = [.. _context.Category.Select(c => new SelectListItem
-                    {
-                        Text = c.Name,
-                        Value = c.Id.ToString()
-                    })]
-                };
-                return res;
+                return true;
             }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<EditViewModel> Edit(int? id)
+        {
+            
+
+            EditViewModel res = new();
+
+            _logger.LogTrace("取得對應產品");
+            var product = await _context.Product
+                            .Include(p => p.Category)
+                            .FirstOrDefaultAsync(m => m.Id == id);
+
+            DetailViewModel dvm = new();
+            dvm.Product = product;
+            if (product != null)
+            {
+                dvm.Imgsrc = ViewImage(product.Image);
+            }
+
+            res = new EditViewModel
+            {
+                Product = product,
+                Imgsrc = dvm.Imgsrc,
+                CategoryList = [.. _context.Category.Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+                })]
+            };
 
             return res;
         }

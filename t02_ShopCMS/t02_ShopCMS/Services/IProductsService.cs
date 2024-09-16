@@ -15,7 +15,7 @@ namespace t02_ShopCMS.Services
         Task<DetailViewModel> Details(int? id);
         Task<bool> Create(Product product, IFormFile myImg);
 
-
+        bool CheckDate(int? id);
         Task<EditViewModel> Edit(int? id);
         Task<bool> EditSave(DetailViewModel dvm, IFormFile myImg);
         Task<DetailViewModel> Delete(int? id);
