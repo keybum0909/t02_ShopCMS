@@ -353,16 +353,15 @@ namespace t02_ShopCMS.Services
                 _context.Product.Remove(product);
                 await _context.SaveChangesAsync();
 
+                var shipOrder = await _context.OrderList.FirstOrDefaultAsync(m => m.ProductId == id);
+                if (shipOrder != null)
+                {
+                    _logger.LogTrace("於資料表OrderList移除產品");
+                    _context.OrderList.Remove(shipOrder);
+                    await _context.SaveChangesAsync();
+                }
             }
 
-
-            var shipOrder = await _context.OrderList.FirstOrDefaultAsync(m => m.ProductId == id);
-            if (shipOrder != null)
-            {
-                _logger.LogTrace("於資料表OrderList移除產品");
-                _context.OrderList.Remove(shipOrder);
-                await _context.SaveChangesAsync();
-            }
             _logger.LogTrace("產品移除成功");
             return true;
         }
