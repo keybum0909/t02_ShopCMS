@@ -69,7 +69,7 @@ namespace t02_ShopCMS.Services
             else
             {
                 _logger.LogTrace("確認產品是否已於待出貨清單內");
-                bool ReadyInDatabase = _context.OrderList.Any(x => x.ProductName == req.ProductName);
+                bool ReadyInDatabase = _context.OrderList.Any(x => x.Id == req.Id);
                 var orderProoductId = _context.Product.Where(x => x.Name == req.ProductName).Select(x => x.Id).FirstOrDefault();
                 if (!ReadyInDatabase)
                 {
@@ -87,11 +87,11 @@ namespace t02_ShopCMS.Services
                 }
                 else
                 {
-                    var newData = _context.OrderList.Where(x => x.ProductName == req.ProductName).ToList();
+                    var newData = _context.OrderList.Where(x => x.Id == req.Id).ToList();
                     foreach (var item in newData)
                     {
                         _logger.LogTrace("新增產品於資料表OrderList");
-                        item.Amount += req.Amount;
+                        item.Amount = req.Amount;
                     }
                 }
 
