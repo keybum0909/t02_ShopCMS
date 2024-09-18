@@ -11,7 +11,7 @@
             {
                 <div class="mb-4 d-flex justify-content-center align-items-center p-0">
                     <div class="form-check col-md-1 d-flex justify-content-center align-items-center p-0">
-                        <input class="form-check-input order-checkbox" type="checkbox" value="" id="flexCheckDefault" data-id="@item.Id" data-product-name="@item.ProductName" data-amount="@item.Amount">
+                        <input class="form-check-input order-checkbox" type="checkbox" value="" id="flexCheckDefault" data-id="@item.Id" data-product-name="@item.ProductName">
                         <label class="form-check-label" for="flexCheckDefault"></label>
                     </div>
                     <div class="row shipment-item col-md-11 d-flex align-items-center" data-product-name="@item.ProductName" data-category="@item.Category">
@@ -48,14 +48,17 @@
 @section Scripts {
 <script>
     const saveArray = [];
-
+    var currentVal;
+    var orderList = @Html.Raw(Json.Serialize(Model.Orders));
+    
     $(function () {
         $('.qtyplus, .qtyminus').click(function (e) {
             e.preventDefault();
             var $this = $(this);
             var fieldName = $this.attr('field');
             var $input = $this.siblings('input[name=' + fieldName + ']');
-            var currentVal = parseInt($input.val());
+            var productId = $this.siblings('input.qty').data('id');
+            currentVal = parseInt($input.val());
 
             if ($this.hasClass('qtyplus')) {
                 $input.val(!isNaN(currentVal) ? currentVal + 1 : 0);
@@ -69,18 +72,20 @@
 
             const amount = parseInt($this.siblings('input[name=' + fieldName + ']').val());
 
-            AmountSave(productName, productCategory, amount)
+            AmountSave(productId, productName, productCategory, amount)
         });
 
-        function AmountSave(productName, productCategory, amount) {
-            
-            fetch('/Shipment/SaveOrder', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ "ProductName": productName, "Amount": amount, "Category": productCategory })
-            })
+    });
+
+    function AmountSave(productId, productName, productCategory, amount) {
+
+        fetch('/Shipment/SaveOrder', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({"Id": productId, "ProductName": productName, "Amount": amount, "Category": productCategory })
+        })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok ' + response.statusText);
@@ -89,12 +94,32 @@
             })
             .then(data => {
                 if (data.success) {
+                    console.log('成功', data)
+
+                    var checkbox = document.getElementById('flexCheckDefault');
+                    var id = checkbox.getAttribute('data-id');
+                    var order = orderList.find(order => order.id == id);
+                    order.amount = amount
                 } else {
+                    swal.fire({
+                        title: '已超出庫存書量',
+                        text: '點選數量已超出庫存書量，請先確認庫存',
+                        icon: 'warning',
+                        confirmButtonText: '確定',
+                        closeModal: false,
+                        allowOutsideClick: false,
+                        closeOnConfirm: false,
+                        closeOnCancel: false,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            //currentVal = currentVal-1;
+                            location.reload();
+                        }
+                    });
                 }
             })
             .catch(error => console.error('Error:', error));
-        }
-    });
+    }
 
     $('.delete-btn').on('click', function (e) {
         e.preventDefault();
@@ -153,17 +178,18 @@
     }
 
     $('.order-checkbox').on('click', function () {
-        const productName = $(this).attr('data-product-name');
-        const amount = $(this).attr('data-amount');
+        const id = $(this).attr('data-id');
+        var order = orderList.find(order => order.id == id);
 
-        saveArray.push({ "ProductName": productName, "Amount": amount })
+        saveArray.push({ "ProductName": order.productName, "Amount": order.amount })
+
     })
 
     $('.submit-btn').on('click', async function () {
         console.log(saveArray)
         if (saveArray.length === 0) {
             swal.fire({
-                title: "You didn't select any product",
+                title: "請先選擇出貨產品",
                 icon: "error"
             })
         } else {

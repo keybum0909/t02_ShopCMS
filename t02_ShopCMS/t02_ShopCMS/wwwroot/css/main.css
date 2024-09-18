@@ -3,11 +3,11 @@
 
 .header p { margin: 5px 0; font-size: 18px; }
 
-.header .logo { display: flex; flex-direction: column; align-items: center; text-align: center; margin: 30px; }
+.logo { display: flex; flex-direction: column; align-items: center; text-align: center; margin: 30px; }
 
-.header .logo img { height: 25px; margin-top: 10px; width: auto; }
+.logo img { height: 25px; margin-top: 10px; width: auto; }
 
-.header .logo span { font-weight: bold; color: #142e7c; font-size: 25px; }
+.logo span { font-weight: bold; color: #142e7c; font-size: 25px; }
 
 .order-group { position: absolute; top: 75px; right: 140px; }
 
@@ -26,12 +26,11 @@
 
 .product-label { padding: 5px 15px; }
 
-.sold-out { background-color: #6c757d; color: #fff; position: absolute; right: 0; top: 0;}
+.sold-out { background-color: #6c757d; color: #fff; position: absolute; right: 0; top: 0; }
 
 .product-description { overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 14px; }
 
-img {height: 100px; width: 200px; margin-top: 10px; display: flex; justify-content: center; }
-.category-description { font-size: 12px; margin-bottom: 10px; }
+img { height: 100px; width: 200px; margin-top: 10px; display: flex; justify-content: center; }
 
 /*Create*/
 h4 { color: #142E7C; font-weight: bold; margin: 20px 0; }
@@ -64,11 +63,10 @@ h4 { color: #142E7C; font-weight: bold; margin: 20px 0; }
 
 .qtyplus { border-radius: 0 5px 5px 0; }
 
-
 /*button*/
 .add-btn { background-color: #14527C; color: #eee; margin-bottom: 5px; border: transparent; padding: 8px 30px; }
 
-.add-btn:hover, .add-btn.active { color: #fff; background-color: #14527C; opacity: 60%; border: transparent; padding: 8px 30px; }
+.add-btn:hover, .add-btn.active { color: #fff; background-color: #14527C; opacity: 60%; border: transparent; }
 
 .submit-btn { background-color: #004B9B; color: #fff; float: right; padding: 5px 30px; }
 
@@ -82,7 +80,7 @@ h4 { color: #142E7C; font-weight: bold; margin: 20px 0; }
 
 .plus-btn { border: transparent; position: absolute; border-radius: 50%; right: 13px; bottom: 15px; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; background-color: #5955C4; color: #fff; }
 
-.plus-btn:hover, .plus-btn.active { border:transparent; opacity:60%; background-color: #5955C4; }
+.plus-btn:hover, .plus-btn.active { border:transparent; opacity:60%; background-color: #5955C4; color: #fff; }
 
 .category-btn { background-color: #fff; color: #142E7C; border-radius: 10px; font-size: 20px; border: dashed 1px; padding: 10px 60px; }
 
@@ -91,5 +89,7 @@ h4 { color: #142E7C; font-weight: bold; margin: 20px 0; }
 .qty-btn { border-width: 1px; height: 25px; background-color: #fff; }
 
 .qty-btn:hover { background-color: #D6CFCF; }
+
+.cancel-btn { background-color: #979797; }
 
 a { text-decoration: none; }

@@ -31,7 +31,7 @@ namespace t02_ShopCMS.Controllers
         public async Task<IActionResult> SaveOrder([FromBody] SaveDatareq req)
         {
             var result = await _shipmentService.SaveOrder(req);
-            if (result != null && result.Count > 0)
+            if (result == true)
             {
                 return Json(new { success = true });
             }
