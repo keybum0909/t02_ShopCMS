@@ -250,8 +250,6 @@ namespace t02_ShopCMS.Services
 
         public async Task<EditViewModel> Edit(int? id)
         {
-            
-
             EditViewModel res = new();
 
             _logger.LogTrace("取得對應產品");

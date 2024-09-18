@@ -69,7 +69,6 @@ namespace t02_ShopCMS.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Product product, IFormFile myImg)
         {
-            //IFormFile name對應input type=file的name屬性)
             if (ModelState.IsValid)
             {
                 var newProduct = await _productsService.Create(product, myImg);

@@ -35,12 +35,14 @@
                 </div>
             </div>
             @*圖片*@
-            <div class="form-group row mb-2">
+            <div class="form-group row">
                 <label asp-for="Product.Image" for="inputImg" class="col-md-1 control-label">產品圖片</label>
-                <div class="col-md-11 custom-file">
-                    <label class="custom-file-label w-100" id="customFileLabel" for="inputImg">選擇圖片</label>
-                    <input type="file" class="custom-file-input" id="inputImg" name="myImg">
-                    <span asp-validation-for="Product.Image" class="text-danger"></span>
+                <div class="input-group col-md-11 custom-file">
+                    <input type="text" class="form-control" placeholder="選擇圖片" aria-describedby="basic-addon2" id="inputImg" name="myImg" readonly>
+                    <div class="input-group-append">
+                        <button class="btn add-btn mb-0" type="button" id="selectImgBtn">選擇圖片</button>
+                    </div>
+                    <input type="file" id="fileInput" style="display: none;" name="myImg" />
                 </div>
             </div>
             <div class="col-4 mb-3 mt-0">
@@ -83,7 +85,7 @@
 
             <div class="col-md form-group">
                 <div class="form-btn">
-                    <a href="Details?id=@Model.Product.Id" value="取消" class="btn cancel-btn">取消</a>
+                    <a href="Details?id=@Model.Product.Id" value="取消" class="btn cancel-btn ms-2">取消</a>
                 </div>
                 <div class="form-btn">
                     <input type="submit" value="儲存" class="btn submit-btn" />
@@ -98,12 +100,14 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-        $('#inputImg').on('change', function (e) {
-            const file = this.files[0];
-            const label = document.getElementById('customFileLabel');
-            const fileName = inputImg.files[0] ? inputImg.files[0].name : '選擇圖片';
-            label.textContent = fileName;
-        })
+        $('#selectImgBtn').on('click', function () {
+            $('#fileInput').click();
+        });
+
+        $('#fileInput').on('change', function () {
+            var fileName = $(this).val().split('\\').pop();
+            $('#inputImg').val(fileName);
+        });
 
         $('#EditForm').on('submit', function (event) {
             event.preventDefault();
