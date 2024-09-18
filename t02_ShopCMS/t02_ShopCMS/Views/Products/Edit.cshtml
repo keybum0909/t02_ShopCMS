@@ -24,7 +24,7 @@
                 <label asp-for="Product.Name" class="col-md-1 control-label required">產品名稱</label>
                 <div class="col-md-11">
                     <input asp-for="Product.Name" class="form-control" name="Product.Name" />
-                    <span asp-validation-for="Product.Name" class="text-danger"></span>
+                    <span class="form-text text-danger" id="NameError" style="display:none;">產品名稱為必填欄位!</span>
                 </div>
             </div>
             @*簡介*@
@@ -35,14 +35,17 @@
                 </div>
             </div>
             @*圖片*@
-            <div class="form-group row">
-                <label asp-for="Product.Image" for="inputImg" class="col-md-1 control-label">產品圖片</label>
-                <div class="input-group col-md-11 custom-file">
-                    <input type="text" class="form-control" placeholder="選擇圖片" aria-describedby="basic-addon2" id="inputImg" name="myImg" readonly>
-                    <div class="input-group-append">
-                        <button class="btn add-btn mb-0" type="button" id="selectImgBtn">選擇圖片</button>
+            <div class="form-group row mb-3">
+                <label asp-for="Product.Image" for="inputImg" class="col-md-1 control-label required">產品圖片</label>
+                <div class="col-md-11">
+                    <div class="input-group custom-file w-100">
+                        <input type="text" class="form-control" placeholder="選擇圖片" aria-describedby="basic-addon2" id="inputImg" name="myImg" readonly>
+                        <div class="input-group-append">
+                            <button class="btn add-btn mb-0" type="button" id="selectImgBtn">選擇圖片</button>
+                        </div>
+                        <input type="file" id="fileInput" style="display: none;" name="myImg" />
                     </div>
-                    <input type="file" id="fileInput" style="display: none;" name="myImg" />
+                    <span class="form-text text-danger" id="imageError" style="display:none;">產品圖片為必填欄位!</span>
                 </div>
             </div>
             <div class="col-4 mb-3 mt-0">
@@ -53,7 +56,7 @@
                 <label asp-for="Product.Price" class="col-md-1 col-form-label required">產品價格</label>
                 <div class="col-md-11">
                     <input asp-for="Product.Price" class="form-control" name="Product.Price" />
-                    <span asp-validation-for="Product.Price" class="text-danger"></span>
+                    <span class="form-text text-danger" id="PriceError" style="display:none;">產品價格為必填欄位!</span>
                 </div>
             </div>
             @*庫存*@
@@ -61,7 +64,7 @@
                 <label asp-for="Product.Stock" class="col-md-1 control-label required">產品庫存</label>
                 <div class="col-md-11">
                     <input asp-for="Product.Stock" class="form-control" name="Product.Stock" />
-                    <span asp-validation-for="Product.Stock" class="text-danger"></span>
+                    <span class="form-text text-danger" id="StockError" style="display:none;">產品庫存為必填欄位!</span>
                 </div>
             </div>
             @* 是否上架 *@
@@ -71,7 +74,6 @@
                 </div>
                 <div class="col-md-11">
                     <input class="form-check-input m-0" type="checkbox" role="switch" id="flexSwitchCheckChecked" name="Product.CanOrder" value="true" @(Model.Product.CanOrder ? "checked" : "")>
-                    <span asp-validation-for="Product.CanOrder" class="text-danger"></span>
                 </div>
             </div>
             @*內容*@
@@ -111,6 +113,9 @@
 
         $('#EditForm').on('submit', function (event) {
             event.preventDefault();
+
+            validateForm();
+
             const form = document.getElementById('EditForm');
             const formData = new FormData(form);
 
@@ -147,8 +152,27 @@
                 });
         });
 
+        function validateForm() {
+
+            $('.form-control').each(function () {
+                if ($(this).val() === "") {
+                    let fieldName = $(this).attr('name').replace('Product.', '');
+                    let errorId = fieldName + 'Error';
+                    $('#' + errorId).show();
+                } else {
+                    let fieldName = $(this).attr('name').replace('Product.', '');
+                    let errorId = fieldName + 'Error';
+                    $('#' + errorId).hide();
+                }
+            });
+
+            if ($('#inputImg').val().trim() === "") {
+                $('#imageError').show();
+                isValid = false;
+            } else {
+                $('#imageError').hide();
+            }
+        }
     </script>
-    
-    <script src="~/lib/ckeditor5/build/ckeditor.js"></script>
 
 }

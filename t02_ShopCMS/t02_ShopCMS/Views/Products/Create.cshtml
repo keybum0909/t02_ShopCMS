@@ -15,7 +15,6 @@
                 <label asp-for="CategoryId" class="col-md-1 control-label required">產品類型</label>
                 <div class="col-md-11">
                     <select class="form-control" asp-for="CategoryId" asp-items="ViewBag.Categories" name="CategoryId"></select>
-                    <span asp-validation-for="CategoryId" class="text-danger"></span>
                 </div>
             </div>
             @*名稱*@
@@ -23,7 +22,7 @@
                 <label asp-for="Name" class="col-md-1 control-label required">產品名稱</label>
                 <div class="col-md-11">
                     <input asp-for="Name" class="form-control" name="Name" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
+                    <span class="form-text text-danger" id="NameError" style="display:none;">產品名稱為必填欄位!</span>
                 </div>
             </div>
             @*簡介*@
@@ -36,12 +35,15 @@
             @*圖片*@
             <div class="form-group row mb-3">
                 <label asp-for="Image" for="inputImg" class="col-md-1 control-label required">產品圖片</label>
-                <div class="input-group col-md-11 custom-file">
-                    <input type="text" class="form-control" placeholder="選擇圖片" aria-describedby="basic-addon2" id="inputImg" name="myImg" readonly>
-                    <div class="input-group-append">
-                        <button class="btn add-btn mb-0" type="button" id="selectImgBtn">選擇圖片</button>
+                <div class="col-md-11">
+                    <div class="input-group custom-file w-100">
+                        <input type="text" class="form-control" placeholder="選擇圖片" aria-describedby="basic-addon2" id="inputImg" name="myImg" readonly>
+                        <div class="input-group-append">
+                            <button class="btn add-btn mb-0" type="button" id="selectImgBtn">選擇圖片</button>
+                        </div>
+                        <input type="file" id="fileInput" style="display: none;" name="myImg" />
                     </div>
-                    <input type="file" id="fileInput" style="display: none;" name="myImg" />
+                    <span class="form-text text-danger" id="imageError" style="display:none;">產品圖片為必填欄位!</span>
                 </div>
             </div>
             @*價格*@
@@ -49,7 +51,7 @@
                 <label asp-for="Price" class="col-md-1 col-form-label required">產品價格</label>
                 <div class="col-md-11">
                     <input asp-for="Price" class="form-control" name="Price" />
-                    <span asp-validation-for="Price" class="text-danger"></span>
+                    <span class="form-text text-danger" id="PriceError" style="display:none;">產品價格為必填欄位!</span>
                 </div>
             </div>
             @*庫存*@
@@ -57,17 +59,16 @@
                 <label asp-for="Stock" class="col-md-1 control-label required">產品庫存</label>
                 <div class="col-md-11">
                     <input asp-for="Stock" class="form-control" name="Stock" />
-                    <span asp-validation-for="Stock" class="text-danger"></span>
+                    <span class="form-text text-danger" id="StockError" style="display:none;">產品庫存為必填欄位!</span>
                 </div>
             </div>
             @* 是否上架 *@
             <div class="form-check form-switch row mb-3 d-flex align-items-center p-0">
                 <div class="col-md-1 d-flex justify-content-left">
-                    <label class="form-check-label required" for="flexSwitchCheckChecked">是否上架</label>
+                    <label class="form-check-label" for="flexSwitchCheckChecked">是否上架</label>
                 </div>
                 <div class="col-md-11">
                     <input class="form-check-input m-0" type="checkbox" role="switch" id="flexSwitchCheckChecked" name="CanOrder" value="true" @(Model?.CanOrder == true ? "checked" : "")>
-                    <span asp-validation-for="CanOrder" class="text-danger"></span>
                 </div>
             </div>
             @*內容*@
@@ -116,6 +117,9 @@
 
         $('#createForm').on('submit', function (event) {
             event.preventDefault();
+
+            validateForm();
+
             const form = document.getElementById('createForm');
             const formData = new FormData(form);
 
@@ -139,7 +143,7 @@
                         });
                     } else {
                         swal.fire({
-                            title: "Error occurred while creating your product.",
+                            title: "新增產品時發生錯誤",
                             icon: "error",
                         });
                     }
@@ -151,6 +155,26 @@
                     });
                 });
         });
+
+        function validateForm() {
+
+            $('.form-control').each(function () {
+                if ($(this).val() === "") {
+                    var errorId = $(this).attr('name') + 'Error';
+                    $('#' + errorId).show();
+                    isValid = false;
+                } else {
+                    var errorId = $(this).attr('name') + 'Error';
+                    $('#' + errorId).hide();
+                }
+            });
+
+            if ($('#inputImg').val().trim() === "") {
+                $('#imageError').show();
+            } else {
+                $('#imageError').hide();
+            }
+        }
     </script>
 
 }

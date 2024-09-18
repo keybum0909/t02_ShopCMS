@@ -32,6 +32,10 @@
 
 img { height: 100px; width: 200px; margin-top: 10px; display: flex; justify-content: center; }
 
+.non-product-show { height: 400px; overflow: hidden; }
+
+.message-container { flex-direction: column; }
+
 /*Create*/
 h4 { color: #142E7C; font-weight: bold; margin: 20px 0; }
 
@@ -44,8 +48,6 @@ h4 { color: #142E7C; font-weight: bold; margin: 20px 0; }
 .custom-file-label::after { content: '選擇圖片'; display: inline-block; background-color: #004B9B; color: #fff; padding: 6px 12px; border-left: 1px solid #ced4da; border-radius: 0 .25rem .25rem 0; cursor: pointer; text-align: center; width: 100px; float: right; }
 
 .custom-file-input { display: none; }
-
-.input-group { width: 91.5%; }
 
 .input-group .add-btn { border-radius: 0 10px 10px 0; }
 
