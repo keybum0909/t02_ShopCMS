@@ -50,6 +50,18 @@ namespace t02_ShopCMS.Services
                 }
             }
 
+            //_logger.LogTrace("圖片轉Base64");
+            //Dictionary<int, string> imageArr = new();
+            //foreach (var item in orders)
+            //{
+            //    var productImage = _context.Product.Where(x => x.Id == item.ProductId).Select(x => x.Image).ToList();
+            //    foreach (var image in productImage)
+            //    {
+            //        string imageList = "data:image/png;base64," + Convert.ToBase64String(image, 0, image.Length);
+            //        imageArr[item.ProductId] = imageList;
+            //    }
+            //}
+
             var queryInitData = new ShipmentViewModel
             {
                 Orders = orders,
@@ -61,7 +73,7 @@ namespace t02_ShopCMS.Services
 
         public async Task<bool> SaveOrder([FromBody] SaveDatareq req)
         {
-            var productStock = _context.Product.Where(x => x.Name == req.ProductName).Select(x => x.Stock).FirstOrDefault();
+            var productStock = _context.Product.Where(x => x.Id == req.ProductId).Select(x => x.Stock).FirstOrDefault();
             if (productStock < req.Amount)
             {
                 return false;
@@ -69,14 +81,13 @@ namespace t02_ShopCMS.Services
             else
             {
                 _logger.LogTrace("確認產品是否已於待出貨清單內");
-                bool ReadyInDatabase = _context.OrderList.Any(x => x.Id == req.Id);
-                var orderProoductId = _context.Product.Where(x => x.Name == req.ProductName).Select(x => x.Id).FirstOrDefault();
+                bool ReadyInDatabase = _context.OrderList.Any(x => x.Id == req.ProductId);
                 if (!ReadyInDatabase)
                 {
                     var shipment = new OrderList
                     {
-                        ProductId = orderProoductId,
-                        ProductName = req.ProductName,
+                        ProductId = _context.Product.Where(x => x.Id == req.ProductId).Select(x => x.Id).FirstOrDefault(),
+                        ProductName = _context.Product.Where(x => x.Id == req.ProductId).Select(x => x.Name).FirstOrDefault(),
                         Amount = req.Amount,
                         Category = req.Category,
                         CreateTime = DateTime.Now
@@ -87,7 +98,7 @@ namespace t02_ShopCMS.Services
                 }
                 else
                 {
-                    var newData = _context.OrderList.Where(x => x.Id == req.Id).ToList();
+                    var newData = _context.OrderList.Where(x => x.Id == req.ProductId).ToList();
                     foreach (var item in newData)
                     {
                         _logger.LogTrace("新增產品於資料表OrderList");
@@ -111,42 +122,54 @@ namespace t02_ShopCMS.Services
 
         public async Task<bool> Order([FromBody] List<Orderreq> req)
         {
-            foreach (var item in req)
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                var product = _context.Product.FirstOrDefault(x => x.Name == item.ProductName);
-
-                _logger.LogTrace("確認是否下架");
-                if (product.CanOrder)
+                try
                 {
-                    var shipment = new ShipmentList
+                    foreach (var item in req)
                     {
-                        ProductName = item.ProductName,
-                        ShipNumber = GenerateOrderNumber(product.CategoryId.ToString()),
-                        Amount = item.Amount,
-                        OrderTime = DateTime.Now,
-                        TotalPrice = item.Amount * product.Price
-                    };
+                        var product = _context.Product.FirstOrDefault(x => x.Name == item.ProductName);
 
-                    _logger.LogTrace("出貨後產生出貨清單");
-                    _context.ShipmentList.Add(shipment);
-                    product.Stock -= item.Amount;
+                        _logger.LogTrace("確認是否下架");
+                        if (product != null && product.CanOrder)
+                        {
+                            var shipment = new ShipmentList
+                            {
+                                ProductName = item.ProductName,
+                                ShipNumber = GenerateOrderNumber(product.CategoryId.ToString()),
+                                Amount = item.Amount,
+                                OrderTime = DateTime.Now,
+                                TotalPrice = item.Amount * product.Price
+                            };
 
-                    _logger.LogTrace("出貨後將出貨列表移除");
-                    var orderItem = _context.OrderList.FirstOrDefault(x => x.ProductName == item.ProductName);
-                    if (orderItem != null)
-                    {
-                        _context.OrderList.Remove(orderItem);
+                            _logger.LogTrace("出貨後產生出貨清單");
+                            _context.ShipmentList.Add(shipment);
+                            await _context.SaveChangesAsync();
+
+                            product.Stock -= item.Amount;
+
+                            _logger.LogTrace("出貨後將出貨列表移除");
+                            var orderItem = _context.OrderList.FirstOrDefault(x => x.ProductName == item.ProductName);
+                            if (orderItem != null)
+                            {
+                                _context.OrderList.Remove(orderItem);
+                            }
+                        }
+
+                        _logger.LogTrace("資料庫更動");
+                        await _context.SaveChangesAsync();
                     }
 
+                    await transaction.CommitAsync();
+                    return true;
                 }
-
-                _logger.LogTrace("資料庫更動");
-                await _context.SaveChangesAsync();
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "出貨時發生錯誤，回滾所有變更");
+                    await transaction.RollbackAsync();
+                    return false;
+                }
             }
-
-            return true;
-            //_logger.LogTrace("資料庫更動失敗");
-            //return false;
         }
 
         public async Task<bool> Delete(int? id)
@@ -165,7 +188,7 @@ namespace t02_ShopCMS.Services
         private string GenerateOrderNumber(string Category)
         {
             _logger.LogTrace("生產訂單編號");
-            string timestamp = DateTime.Now.ToString("yyyyMMddHHmm");
+            string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
 
             Random random = new Random();
             string randomDigits = random.Next(0, 100).ToString("D2");

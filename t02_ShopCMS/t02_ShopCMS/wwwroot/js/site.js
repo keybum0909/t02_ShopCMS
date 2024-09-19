@@ -30,11 +30,9 @@ $(document).ready(function () {
                     'top': '-4px',
                 }
             });
-
-            // 选择目标元素
+            
             var targetElement = $('input.order-btn');
-
-            // 在目标元素前插入新的 div
+            
             newDiv.insertBefore(targetElement);
         })
         .catch(error => {
