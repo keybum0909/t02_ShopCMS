@@ -184,7 +184,7 @@
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ "ProductName": productName, "Amount": amount, "Category": productCategory })
+                body: JSON.stringify({ "ProductId": productId, "ProductName": productName, "Amount": amount, "Category": productCategory })
         })
             .then(response => {
                 if (!response.ok) {
@@ -225,27 +225,5 @@
                 console.error('錯誤:', error);
             });
     }
-
-    $('add-product').on('click', function (e) {
-        if (categoryModel == null) {
-            swal.fire({
-                title: '尚無產品類別',
-                text: '目前尚無產品類別，請先輸入',
-                icon: 'success',
-                confirmButtonText: '確認',
-                closeModal: false,
-                allowOutsideClick: false,
-                closeOnConfirm: false,
-                closeOnCancel: false,
-            })
-        } else {
-            fetch('/Products/Create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-        }
-    })
 </script>
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -38,13 +39,10 @@ namespace t02_ShopCMS.Services
             _logger.LogTrace("圖片轉Base64");
             foreach (var item in products)
             {
-                if (products != null)
+                if (item.Image != null)
                 {
-                    if (item.Image != null)
-                    {
-                        var imageList = new List<string> { ViewImage(item.Image) };
-                        imageArr[item.Id] = imageList;
-                    }
+                    var imageList = new List<string> { ViewImage(item.Image) };
+                    imageArr[item.Id] = imageList;
                 }
             }
 
@@ -119,13 +117,10 @@ namespace t02_ShopCMS.Services
                 Dictionary<int, List<string>> imageArr = new();
                 foreach (var item in products)
                 {
-                    if (products != null)
+                    if (item.Image != null)
                     {
-                        if (item.Image != null)
-                        {
-                            var imageList = new List<string> { ViewImage(item.Image) };
-                            imageArr[item.Id] = imageList;
-                        }
+                        var imageList = new List<string> { ViewImage(item.Image) };
+                        imageArr[item.Id] = imageList;
                     }
                 }
 
@@ -157,13 +152,10 @@ namespace t02_ShopCMS.Services
                 Dictionary<int, List<string>> imageArr = new();
                 foreach (var item in products)
                 {
-                    if (products != null)
+                    if (item.Image != null)
                     {
-                        if (item.Image != null)
-                        {
-                            var imageList = new List<string> { ViewImage(item.Image) };
-                            imageArr[item.Id] = imageList;
-                        }
+                        var imageList = new List<string> { ViewImage(item.Image) };
+                        imageArr[item.Id] = imageList;
                     }
                 }
 
@@ -283,35 +275,61 @@ namespace t02_ShopCMS.Services
             _logger.LogTrace("取得對應產品");
             var product = _context.Product.Where(x => x.Id == dvm.Product.Id).FirstOrDefault();
 
-            if(product != null)
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                _logger.LogTrace("修改產品資訊");
-                product.Name = dvm.Product.Name;
-                product.Description = dvm.Product.Description;
-                product.Price = dvm.Product.Price;
-                product.Stock = dvm.Product.Stock;
-                product.CanOrder = dvm.Product.CanOrder;
-                product.Content = dvm.Product.Content;
-                product.CategoryId = dvm.Product.CategoryId;
-
-                if (myImg != null)
+                try
                 {
-                    using (var ms = new MemoryStream())
+                    if (product != null)
                     {
-                        myImg.CopyTo(ms);
-                        product.Image = ms.ToArray();
+                        _logger.LogTrace("修改產品資訊");
+                        product.Name = dvm.Product.Name;
+                        product.Description = dvm.Product.Description;
+                        product.Price = dvm.Product.Price;
+                        product.Stock = dvm.Product.Stock;
+                        product.CanOrder = dvm.Product.CanOrder;
+                        product.Content = dvm.Product.Content;
+                        product.CategoryId = dvm.Product.CategoryId;
+
+                        if (myImg != null)
+                        {
+                            using (var ms = new MemoryStream())
+                            {
+                                myImg.CopyTo(ms);
+                                product.Image = ms.ToArray();
+                            }
+                        }
+
+                        _logger.LogTrace("儲存於資料庫");
+                        _context.Update(product);
+
+                        _logger.LogTrace("修改帶出貨清單資訊");
+                        var order = _context.OrderList.Where(x => x.ProductId == dvm.Product.Id).FirstOrDefault();
+                        if (order != null)
+                        {
+                            order.ProductId = order.ProductId;
+                            order.ProductName = dvm.Product.Name;
+                            order.Amount = order.Amount;
+                            order.Category = _context.Category.Where(x => x.Id == dvm.Product.CategoryId).Select(x => x.Name).FirstOrDefault();
+                            order.CreateTime = order.CreateTime;
+                        }
+
+                        _logger.LogTrace("儲存於資料庫");
+                        _context.Update(order);
+
+                        await _context.SaveChangesAsync();
+
                     }
+                    _logger.LogTrace("修改成功");
+                    await transaction.CommitAsync();
+                    return true;
                 }
-
-                _logger.LogTrace("儲存於資料庫");
-                _context.Update(product);
-                await _context.SaveChangesAsync();
-
-                _logger.LogTrace("修改成功");
-                return true;
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "出貨時發生錯誤，回滾所有變更");
+                    await transaction.RollbackAsync();
+                    return false;
+                }
             }
-            _logger.LogTrace("修改失敗");
-            return false;
         }
 
         public async Task<DetailViewModel> Delete(int? id)

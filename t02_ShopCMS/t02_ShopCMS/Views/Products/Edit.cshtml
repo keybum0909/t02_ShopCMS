@@ -45,7 +45,6 @@
                         </div>
                         <input type="file" id="fileInput" style="display: none;" name="myImg" />
                     </div>
-                    <span class="form-text text-danger" id="imageError" style="display:none;">產品圖片為必填欄位!</span>
                 </div>
             </div>
             <div class="col-4 mb-3 mt-0">
@@ -165,13 +164,6 @@
                     $('#' + errorId).hide();
                 }
             });
-
-            if ($('#inputImg').val().trim() === "") {
-                $('#imageError').show();
-                isValid = false;
-            } else {
-                $('#imageError').hide();
-            }
         }
     </script>
 
