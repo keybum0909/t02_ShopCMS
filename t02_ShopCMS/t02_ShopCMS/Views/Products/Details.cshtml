@@ -65,9 +65,7 @@
             </p>
         </div>
         <div class="col-md form-group">
-            <form asp-action="Edit" asp-route-id="@Model.Product.Id">
-                <button type="submit" class="btn submit-btn">編輯產品</button>
-            </form>
+            <button type="submit" class="btn submit-btn" data-id="@Model.Product.Id">編輯產品</button>
             <form method="post" id="deleteForm">
                 @Html.AntiForgeryToken()
                 <input type="hidden" id="Id" value="@Model.Product.Id" />
@@ -135,5 +133,30 @@
                     });
                 });
         }
+
+        $('.submit-btn').on('click', function (e) {
+            var id = $(this).attr('data-id');
+
+            fetch(`/Products/CheckDate?id=${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result) {
+                        window.location.href = `/Products/Edit?id=${id}`
+                    } else {
+                        swal.fire({
+                            title: "此產品於兩周內上架，不可編輯",
+                            icon: "error"
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('錯誤:', error);
+                });
+        });
     </script>
 }
