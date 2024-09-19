@@ -32,6 +32,10 @@
 
 img { height: 100px; width: 200px; margin-top: 10px; display: flex; justify-content: center; }
 
+.non-product-show { height: 400px; overflow: hidden; }
+
+.message-container { flex-direction: column; }
+
 /*Create*/
 h4 { color: #142E7C; font-weight: bold; margin: 20px 0; }
 
@@ -44,6 +48,8 @@ h4 { color: #142E7C; font-weight: bold; margin: 20px 0; }
 .custom-file-label::after { content: '選擇圖片'; display: inline-block; background-color: #004B9B; color: #fff; padding: 6px 12px; border-left: 1px solid #ced4da; border-radius: 0 .25rem .25rem 0; cursor: pointer; text-align: center; width: 100px; float: right; }
 
 .custom-file-input { display: none; }
+
+.input-group .add-btn { border-radius: 0 10px 10px 0; }
 
 /*Details*/
 .product-image { width: 100%; }
@@ -90,6 +96,8 @@ h4 { color: #142E7C; font-weight: bold; margin: 20px 0; }
 
 .qty-btn:hover { background-color: #D6CFCF; }
 
-.cancel-btn { background-color: #979797; }
+.cancel-btn { background-color: #818181; color: #fff; float: right; padding: 5px 30px; }
+
+.cancel-btn:hover, .cancel-btn.active { background-color: #818181; color: #fff; opacity: 60%; }
 
 a { text-decoration: none; }
