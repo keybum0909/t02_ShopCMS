@@ -57,9 +57,10 @@
             var $this = $(this);
             var fieldName = $this.attr('field');
             var $input = $this.siblings('input[name=' + fieldName + ']');
-            var productId = $this.siblings('input.qty').data('id');
+            var id = $this.siblings('input.qty').data('id');
+            var product = orderList.find(x => x.Id = id);
             currentVal = parseInt($input.val());
-
+            console.log(product)
             if ($this.hasClass('qtyplus')) {
                 $input.val(!isNaN(currentVal) ? currentVal + 1 : 0);
             } else if ($this.hasClass('qtyminus')) {
@@ -71,8 +72,7 @@
             const productCategory = productDiv.getAttribute('data-category');
 
             const amount = parseInt($this.siblings('input[name=' + fieldName + ']').val());
-
-            AmountSave(productId, productName, productCategory, amount)
+            AmountSave(product.productId, productName, productCategory, amount)
         });
 
     });
@@ -84,7 +84,7 @@
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({"Id": productId, "ProductName": productName, "Amount": amount, "Category": productCategory })
+            body: JSON.stringify({"ProductId": productId, "ProductName": productName, "Amount": amount, "Category": productCategory })
         })
             .then(response => {
                 if (!response.ok) {
@@ -112,7 +112,6 @@
                         closeOnCancel: false,
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            //currentVal = currentVal-1;
                             location.reload();
                         }
                     });
