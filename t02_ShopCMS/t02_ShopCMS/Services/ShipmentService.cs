@@ -144,7 +144,6 @@ namespace t02_ShopCMS.Services
 
                             _logger.LogTrace("出貨後產生出貨清單");
                             _context.ShipmentList.Add(shipment);
-                            await _context.SaveChangesAsync();
 
                             product.Stock -= item.Amount;
 

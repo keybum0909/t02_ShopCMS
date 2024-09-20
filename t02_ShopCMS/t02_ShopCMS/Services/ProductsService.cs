@@ -56,44 +56,7 @@ namespace t02_ShopCMS.Services
             return result;
         }
 
-        public async Task<IndexViewModel> SearchProduct(string searchString)
-        {
-            _logger.LogTrace("取得對應類別的產品");
-            var products = _context.Product.Where(x => searchString.Contains(x.Name)).Select(x => new Product
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Description = x.Description,
-                Image = x.Image,
-                CanOrder = x.CanOrder,
-                Category = new Category
-                {
-                    Name = x.Category.Name
-                }
-            }).ToList();
-
-            _logger.LogTrace("圖片轉Base64");
-            Dictionary<int, List<string>> imageArr = new();
-            foreach (var item in products)
-            {
-                if (products != null)
-                {
-                    if (item.Image != null)
-                    {
-                        var imageList = new List<string> { ViewImage(item.Image) };
-                        imageArr[item.Id] = imageList;
-                    }
-                }
-            }
-
-            var result = new IndexViewModel
-            {
-                Products = products,
-                Imgsrc = imageArr
-            };
-
-            return result;
-        }
+        
 
         public async Task<IndexViewModel> CategoryFilter(int id)
         {
