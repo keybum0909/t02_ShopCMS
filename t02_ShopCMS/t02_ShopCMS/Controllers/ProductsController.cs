@@ -35,13 +35,6 @@ namespace t02_ShopCMS.Controllers
         }
 
         [HttpPost]
-        public async Task<IndexViewModel> SearchProduct(string searchString)
-        {
-            var result = await _productsService.SearchProduct(searchString);
-            return result;
-        }
-
-        [HttpPost]
         public async Task<IndexViewModel> CategoryFilter(int id)
         {
             var result = await _productsService.CategoryFilter(id);

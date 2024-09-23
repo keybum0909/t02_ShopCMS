@@ -10,7 +10,6 @@ namespace t02_ShopCMS.Services
     public interface IProductsService
     {
         Task<IndexViewModel> QueryInit();
-        Task<IndexViewModel> SearchProduct(string searchString);
         Task<IndexViewModel> CategoryFilter(int id);
         Task<DetailViewModel> Details(int? id);
         Task<bool> Create(Product product, IFormFile myImg);
