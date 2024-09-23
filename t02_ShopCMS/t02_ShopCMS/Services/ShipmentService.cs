@@ -124,6 +124,9 @@ namespace t02_ShopCMS.Services
         {
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
+                var addShipmments = new List<ShipmentList>();
+                var removeOrders = new List<OrderList>();
+
                 try
                 {
                     foreach (var item in req)
@@ -143,21 +146,21 @@ namespace t02_ShopCMS.Services
                             };
 
                             _logger.LogTrace("出貨後產生出貨清單");
-                            _context.ShipmentList.Add(shipment);
+                            addShipmments.Add(shipment);
 
                             product.Stock -= item.Amount;
 
                             _logger.LogTrace("出貨後將出貨列表移除");
                             var orderItem = _context.OrderList.FirstOrDefault(x => x.ProductName == item.ProductName);
-                            if (orderItem != null)
-                            {
-                                _context.OrderList.Remove(orderItem);
-                            }
+
+                            removeOrders.Add(orderItem);
                         }
 
-                        _logger.LogTrace("資料庫更動");
-                        await _context.SaveChangesAsync();
                     }
+                    _logger.LogTrace("資料庫更動");
+                    await _context.ShipmentList.AddRangeAsync(addShipmments);
+                    _context.OrderList.RemoveRange(removeOrders);
+                    await _context.SaveChangesAsync();
 
                     await transaction.CommitAsync();
                     return true;

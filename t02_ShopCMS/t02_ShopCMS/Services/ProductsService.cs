@@ -274,10 +274,10 @@ namespace t02_ShopCMS.Services
                             order.Amount = order.Amount;
                             order.Category = _context.Category.Where(x => x.Id == dvm.Product.CategoryId).Select(x => x.Name).FirstOrDefault();
                             order.CreateTime = order.CreateTime;
-                        }
 
-                        _logger.LogTrace("儲存於資料庫");
-                        _context.Update(order);
+                            _logger.LogTrace("儲存於資料庫");
+                            _context.Update(order);
+                        }
 
                         await _context.SaveChangesAsync();
 
