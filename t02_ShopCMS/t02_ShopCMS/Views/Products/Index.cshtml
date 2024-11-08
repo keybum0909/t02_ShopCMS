@@ -59,7 +59,7 @@
             element.classList.add('active');
         }
 
-        fetch(`/Products/CategoryFilter?id=${id}`, {
+        fetch(`/Wendy_ShopCMS/Products/CategoryFilter?id=${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -83,6 +83,7 @@
     function loadProducts(result){
         $('.product-area').empty();
 
+        let imgSrc = '@Url.Content("~/images/icons8-warning-30.png")';
         var products = result.products;
         var image = result.imgsrc;
 
@@ -101,7 +102,7 @@
                             <div class="product-description pe-5">${product.description ? product.description : "無"}</div>
                             <div class="product-item mt-3">
                                 <a href="javascript:CheckDate(${product.id})" data-id="${product.id} class="product-action edit-product">修改產品</a> |
-                                <a href="Products/Details?id=${product.id}" data-id="${product.id}" class="product-action">產品資訊</a>
+                                <a href="Wendy_ShopCMS/Products/Details?id=${product.id}" data-id="${product.id}" class="product-action">產品資訊</a>
                             </div>
                             <button class="btn plus-btn">+</button>
                         </div>
@@ -116,7 +117,7 @@
                             <div class="product-description pe-5">${product.description ? product.description : "無"}</div>
                             <div class="product-item mt-3">
                                 <a href="javascript:CheckDate(${product.id})" data-id="${product.id} class="product-action edit-product">修改產品</a> |
-                                <a href="Products/Details?id=${product.id}" data-id="${product.id}" class="product-action">產品資訊</a>
+                                <a href="Wendy_ShopCMS/Products/Details?id=${product.id}" data-id="${product.id}" class="product-action">產品資訊</a>
                             </div>
                         </div>
                     `);
@@ -131,10 +132,7 @@
             $('.product-area').append(`
             <div class="row non-product-show">
                 <div class="d-flex align-items-center justify-content-center message-container">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16" style="color: #818181;">
-                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                      <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                    </svg>
+                    <img src="${imgSrc}" style="color: #818181;" height="50" />
                     <span class="mt-3" style="color: #818181;">目前尚無產品，請先新增</span>
                 </div>
             </div>
@@ -172,7 +170,7 @@
         const productCategory = productCard.find('.category-name').text();
         const amount = 1;
 
-        fetch('/Shipment/SaveOrder', {
+        fetch('/Wendy_ShopCMS/Shipment/SaveOrder', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -187,7 +185,7 @@
             })
             .then(data => {
                 if (data.success) {
-                    window.location.href = "/Shipment/Index";
+                    window.location.href = "/Wendy_ShopCMS/Shipment/Index";
                 } else {
                     alert('加入購物車發生錯誤');
                 }
@@ -197,7 +195,7 @@
     
     function CheckDate(id) {
 
-        fetch(`/Products/CheckDate?id=${id}`, {
+        fetch(`/Wendy_ShopCMS/Products/CheckDate?id=${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -206,7 +204,7 @@
             .then(response => response.json())
             .then(result => {
                 if (result) {
-                    window.location.href = `/Products/Edit?id=${id}`
+                    window.location.href = `/Wendy_ShopCMS/Products/Edit?id=${id}`
                 }else{
                     swal.fire({
                         title: "此產品於兩周內上架，不可編輯",

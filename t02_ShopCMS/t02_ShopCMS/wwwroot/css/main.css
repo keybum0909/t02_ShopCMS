@@ -30,7 +30,7 @@
 
 .product-description { overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 14px; }
 
-img { height: 100px; width: 200px; margin-top: 10px; display: flex; justify-content: center; }
+img { height: 100px; margin-top: 10px; display: flex; justify-content: center; }
 
 .non-product-show { height: 400px; overflow: hidden; }
 

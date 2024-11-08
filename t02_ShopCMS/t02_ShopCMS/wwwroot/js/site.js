@@ -3,7 +3,7 @@
 
 // Write your JavaScript code.
 $(document).ready(function () {
-    fetch('/Products/OrderListNum', {
+    fetch('/Wendy_ShopCMS/Products/OrderListNum', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

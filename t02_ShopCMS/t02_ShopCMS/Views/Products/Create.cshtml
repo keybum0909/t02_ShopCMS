@@ -101,7 +101,7 @@
                     closeOnConfirm: false,
                     closeOnCancel: false,
                 }).then((result) => {
-                    window.location.href = '/';
+                    window.location.href = '/Wendy_ShopCMS';
                 });
             }
         })
@@ -139,7 +139,7 @@
                         closeOnConfirm: false,
                         closeOnCancel: false,
                     }).then((result) => {
-                        window.location.href = '/';
+                        window.location.href = '/Wendy_ShopCMS';
                     });
                 },
                 error: function (response) {
@@ -149,37 +149,6 @@
                     });
                 }
             })
-            // fetch('/Products/Create', {
-            //     method: 'POST',
-            //     body: formData
-            // })
-            //     .then(response => response.json())
-            //     .then(data => {
-            //         if (data.success) {
-            //             swal.fire({
-            //                 title: '產品新增成功',
-            //                 icon: 'success',
-            //                 confirmButtonText: '確認',
-            //                 closeModal: false,
-            //                 allowOutsideClick: false,
-            //                 closeOnConfirm: false,
-            //                 closeOnCancel: false,
-            //             }).then((result) => {
-            //                 window.location.href = '/';
-            //             });
-            //         } else {
-            //             swal.fire({
-            //                 title: "新增產品時發生錯誤",
-            //                 icon: "error",
-            //             });
-            //         }
-            //     })
-            //     .catch(error => {
-            //         swal.fire({
-            //             title: "Error occurred: " + error.message,
-            //             icon: "error",
-            //         });
-            //     });
         });
 
         function validateForm() {

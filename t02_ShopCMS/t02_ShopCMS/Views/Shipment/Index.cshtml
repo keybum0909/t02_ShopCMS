@@ -11,10 +11,7 @@
             {
                 <div class="row non-product-show">
                     <div class="d-flex align-items-center justify-content-center message-container">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16" style="color: #818181;">
-                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
-                        </svg>
+                        <img src="~/images/icons8-warning-30.png" style="color: #818181;" height="50" />
                         <span class="mt-3" style="color: #818181;">目前尚無產品，請先新增</span>
                     </div>
                 </div>
@@ -94,7 +91,7 @@
 
     function AmountSave(productId, productName, productCategory, amount) {
 
-        fetch('/Shipment/SaveOrder', {
+        fetch('/Wendy_ShopCMS/Shipment/SaveOrder', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -164,7 +161,7 @@
 
     function deleteData(id) {
 
-        fetch(`/Shipment/Delete?id=${id}`, {
+        fetch(`/Wendy_ShopCMS/Shipment/Delete?id=${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -208,7 +205,7 @@
             })
         } else {
             try{
-                const response = await fetch('/Shipment/Order', {
+                const response = await fetch('/Wendy_ShopCMS/Shipment/Order', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

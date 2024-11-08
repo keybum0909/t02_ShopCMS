@@ -118,7 +118,7 @@
             const form = document.getElementById('EditForm');
             const formData = new FormData(form);
 
-            fetch('/Products/EditSave', {
+            fetch('/Wendy_ShopCMS/Products/EditSave', {
                 method: 'POST',
                 body: formData
             })
@@ -134,7 +134,7 @@
                             closeOnConfirm: false,
                             closeOnCancel: false,
                         }).then((result) => {
-                            window.location.href = '/';
+                            window.location.href = '/Wendy_ShopCMS';
                         });
                     } else {
                         swal.fire({
